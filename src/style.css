@@ -1,0 +1,282 @@
+:root {
+  --ink: #3d3229;
+  --paper: #f2ede4;
+  --sand: #d9c49a;
+  --water: #2f6f8f;
+  --accent: #8a6d4b;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  font-family: 'PingFang TC', 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+  background: #241d17;
+  color: var(--ink);
+}
+#scene {
+  position: fixed;
+  inset: 0;
+}
+canvas {
+  display: block;
+}
+
+/* ── 頂部標題 ── */
+#title {
+  position: fixed;
+  top: 14px;
+  left: 18px;
+  color: #e8ddc9;
+  pointer-events: none;
+  letter-spacing: 0.14em;
+  font-size: 13px;
+  opacity: 0.85;
+}
+#title b {
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.3em;
+  display: block;
+  margin-bottom: 2px;
+}
+
+/* ── 工具列 ── */
+#toolbar {
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 16px;
+  background: rgba(242, 237, 228, 0.92);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(6px);
+}
+.tool {
+  border: 0;
+  background: transparent;
+  border-radius: 11px;
+  padding: 9px 13px;
+  font-size: 13px;
+  color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 58px;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.tool span.ic {
+  font-size: 19px;
+  line-height: 1;
+}
+.tool.on {
+  background: var(--ink);
+  color: var(--paper);
+}
+.tool:not(.on):hover {
+  background: rgba(61, 50, 41, 0.08);
+}
+
+/* ── 物件抽屜 ── */
+#drawer {
+  position: fixed;
+  left: 50%;
+  bottom: 86px;
+  transform: translateX(-50%);
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  border-radius: 14px;
+  width: min(560px, 92vw);
+  max-height: 46vh;
+  background: rgba(242, 237, 228, 0.94);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(6px);
+}
+#drawer.show {
+  display: flex;
+}
+#drawer .search-row {
+  display: flex;
+  gap: 6px;
+}
+#drawer .search-row input {
+  flex: 1;
+  border: 1px solid rgba(61, 50, 41, 0.25);
+  border-radius: 9px;
+  padding: 7px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  background: #fff;
+  color: var(--ink);
+}
+#drawer .tabs {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+#drawer .tabs::-webkit-scrollbar {
+  display: none;
+}
+#drawer .tab {
+  flex: none;
+  border: 0;
+  background: transparent;
+  border-radius: 9px;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: var(--ink);
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+}
+#drawer .tab.on {
+  background: var(--ink);
+  color: var(--paper);
+}
+#drawer .tab:not(.on):hover {
+  background: rgba(61, 50, 41, 0.08);
+}
+#drawer .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+  gap: 4px;
+  overflow-y: auto;
+  padding-top: 2px;
+}
+#drawer .empty {
+  padding: 18px 6px;
+  text-align: center;
+  font-size: 12px;
+  color: rgba(61, 50, 41, 0.6);
+}
+.obj-btn {
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  padding: 8px 6px;
+  font-size: 11px;
+  color: var(--ink);
+  font-family: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  position: relative;
+}
+.obj-btn span.ic {
+  font-size: 22px;
+}
+.obj-btn:hover {
+  background: rgba(61, 50, 41, 0.08);
+}
+.obj-btn.picked {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ── 選取物件的操作 ── */
+#objctl {
+  position: fixed;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px;
+  border-radius: 14px;
+  background: rgba(242, 237, 228, 0.92);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+}
+#objctl.show {
+  display: flex;
+}
+#objctl button {
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  width: 44px;
+  height: 44px;
+  font-size: 18px;
+  color: var(--ink);
+  font-family: inherit;
+}
+#objctl button:hover {
+  background: rgba(61, 50, 41, 0.08);
+}
+#objctl button.active {
+  background: rgba(61, 50, 41, 0.16);
+}
+#objctl .del {
+  color: #a33;
+}
+#objctl .sep {
+  height: 1px;
+  background: rgba(61, 50, 41, 0.15);
+  margin: 2px 4px;
+}
+
+/* ── 提示 ── */
+#hint {
+  position: fixed;
+  top: 14px;
+  right: 18px;
+  max-width: 230px;
+  text-align: right;
+  color: #e8ddc9;
+  font-size: 12px;
+  line-height: 1.7;
+  opacity: 0.75;
+  pointer-events: none;
+  letter-spacing: 0.05em;
+  white-space: pre-line;
+}
+#toast {
+  position: fixed;
+  top: 64px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(61, 50, 41, 0.92);
+  color: #f2ede4;
+  font-size: 13px;
+  padding: 8px 18px;
+  border-radius: 99px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  letter-spacing: 0.08em;
+  max-width: 80vw;
+  text-align: center;
+}
+#toast.show {
+  opacity: 1;
+}
+@media (max-width: 640px) {
+  .tool {
+    min-width: 48px;
+    padding: 8px 8px;
+    font-size: 11px;
+  }
+  #hint {
+    display: none;
+  }
+  #drawer {
+    bottom: 82px;
+  }
+}

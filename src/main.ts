@@ -1,0 +1,144 @@
+import './style.css';
+import { createSceneBundle } from './scene/SceneSetup';
+import { buildTray } from './scene/TrayBuilder';
+import { WaterSurface } from './scene/WaterSurface';
+import { SandHeightfield } from './sand/SandHeightfield';
+import { OrbitCamera } from './camera/OrbitCamera';
+import { ObjectRegistry } from './objects/ObjectRegistry';
+import { ObjectFactory } from './objects/ObjectFactory';
+import { settleObject } from './objects/settle';
+import { RaycastService } from './interaction/RaycastService';
+import { SelectionController } from './interaction/SelectionController';
+import { InputStateMachine, applyTransform, type Mode } from './interaction/InputStateMachine';
+import { attachPointerTracker } from './interaction/PointerTracker';
+import { NoopActionLogSink } from './history/ActionLog';
+import { exportPng } from './export/PngExporter';
+import { Toast } from './ui/Toast';
+import { HintPanel } from './ui/HintPanel';
+import { Toolbar, toastForMode } from './ui/Toolbar';
+import { ObjectDrawer } from './ui/ObjectDrawer';
+import { ObjectControlPanel } from './ui/ObjectControlPanel';
+import { OBJECT_SCALE_STEP } from './config/constants';
+
+const sceneContainer = document.getElementById('scene')!;
+const { scene, camera, renderer } = createSceneBundle(sceneContainer);
+
+buildTray(scene);
+const water = new WaterSurface(scene, renderer);
+const sand = new SandHeightfield(scene);
+const orbitCamera = new OrbitCamera(camera);
+
+const registry = new ObjectRegistry();
+const factory = new ObjectFactory();
+const selection = new SelectionController();
+const raycast = new RaycastService(camera, sand.mesh, () => registry.allGroups());
+const actionLog = new NoopActionLogSink();
+
+const toastEl = document.getElementById('toast')!;
+const toast = new Toast(toastEl);
+const hintPanel = new HintPanel(document.getElementById('hint')!);
+const drawerEl = document.getElementById('drawer')!;
+const objctlEl = document.getElementById('objctl')!;
+
+const stateMachine = new InputStateMachine({
+  scene,
+  raycast,
+  sand,
+  registry,
+  selection,
+  camera: orbitCamera,
+  factory,
+  actionLog,
+  onPlacingStateChange: (loading) => {
+    if (loading) toast.show('載入模型中…');
+  },
+  onObjectPlaced: (placed) => {
+    if (placed.isPlaceholderFallback) toast.show('此物件模型載入失敗，暫以佔位符顯示');
+  },
+});
+
+sand.onChanged(() => {
+  for (const placed of registry.all()) settleObject(placed, raycast, sand);
+});
+
+const drawer = new ObjectDrawer(drawerEl, {
+  onPick: (kindId) => {
+    stateMachine.placeKind = kindId;
+  },
+});
+
+const objectControlPanel = new ObjectControlPanel(objctlEl, {
+  onRotate: (dir) => {
+    const s = selection.selected;
+    if (!s) return;
+    s.group.rotation.y += dir * (Math.PI / 12);
+    actionLog.emit({ type: 'object.transform', timestamp: Date.now(), placedId: s.id, rotationY: s.group.rotation.y });
+  },
+  onFlip: () => {
+    const s = selection.selected;
+    if (!s) return;
+    s.flipped = !s.flipped;
+    applyTransform(s);
+    objectControlPanel.show(s);
+    actionLog.emit({ type: 'object.transform', timestamp: Date.now(), placedId: s.id, flipped: s.flipped });
+  },
+  onLieDown: () => {
+    const s = selection.selected;
+    if (!s) return;
+    s.lyingDown = !s.lyingDown;
+    s.group.rotation.x = s.lyingDown ? Math.PI / 2 : 0;
+    settleObject(s, raycast, sand);
+    objectControlPanel.show(s);
+    actionLog.emit({ type: 'object.transform', timestamp: Date.now(), placedId: s.id, lyingDown: s.lyingDown });
+  },
+  onScale: (dir) => {
+    const s = selection.selected;
+    if (!s) return;
+    s.scale = Math.max(0.4, Math.min(2.5, s.scale + dir * OBJECT_SCALE_STEP));
+    applyTransform(s);
+    settleObject(s, raycast, sand);
+    actionLog.emit({ type: 'object.transform', timestamp: Date.now(), placedId: s.id, scale: s.scale });
+  },
+  onDelete: () => {
+    const s = selection.selected;
+    if (!s) return;
+    scene.remove(s.group);
+    registry.remove(s.id);
+    for (const child of registry.childrenOf(s.id)) settleObject(child, raycast, sand);
+    selection.select(null);
+    actionLog.emit({ type: 'object.delete', timestamp: Date.now(), placedId: s.id });
+  },
+});
+
+selection.onChange((placed) => objectControlPanel.show(placed));
+
+function applyMode(mode: Mode): void {
+  stateMachine.setMode(mode);
+  drawer.show(mode === 'place');
+  if (mode !== 'place') drawer.clearPick();
+  hintPanel.setMode(mode);
+  toast.show(toastForMode(mode));
+}
+
+new Toolbar(document.getElementById('toolbar')!, {
+  onModeChange: applyMode,
+  onExport: () => {
+    exportPng(renderer, scene, camera);
+    toast.show('已匯出沙盤影像');
+  },
+});
+applyMode('orbit');
+
+attachPointerTracker(renderer.domElement, {
+  onDown: (p) => stateMachine.onDown(p),
+  onMove: (p) => stateMachine.onMove(p),
+  onUp: () => stateMachine.onUp(),
+  onWheelZoom: (f) => stateMachine.onWheelZoom(f),
+  onPinchZoom: (f) => stateMachine.onPinchZoom(f),
+});
+
+(function loop(t?: number) {
+  requestAnimationFrame(loop);
+  water.update(t ?? 0);
+  renderer.render(scene, camera);
+})();

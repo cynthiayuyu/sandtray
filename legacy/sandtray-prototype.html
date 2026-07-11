@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>線上沙盤・雛形</title>
+<style>
+  :root{
+    --ink:#3d3229;
+    --paper:#f2ede4;
+    --sand:#d9c49a;
+    --water:#2f6f8f;
+    --accent:#8a6d4b;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{height:100%;overflow:hidden;font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;background:#241d17;color:var(--ink)}
+  #scene{position:fixed;inset:0}
+  canvas{display:block}
+
+  /* ── 頂部標題 ── */
+  #title{
+    position:fixed;top:14px;left:18px;color:#e8ddc9;pointer-events:none;
+    letter-spacing:.14em;font-size:13px;opacity:.85;
+  }
+  #title b{font-weight:600;font-size:15px;letter-spacing:.3em;display:block;margin-bottom:2px}
+
+  /* ── 工具列 ── */
+  #toolbar{
+    position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
+    display:flex;gap:6px;padding:8px;border-radius:16px;
+    background:rgba(242,237,228,.92);box-shadow:0 6px 24px rgba(0,0,0,.35);
+    backdrop-filter:blur(6px);
+  }
+  .tool{
+    border:0;background:transparent;border-radius:11px;
+    padding:9px 13px;font-size:13px;color:var(--ink);cursor:pointer;
+    display:flex;flex-direction:column;align-items:center;gap:3px;min-width:58px;
+    font-family:inherit;transition:background .15s;
+  }
+  .tool span.ic{font-size:19px;line-height:1}
+  .tool.on{background:var(--ink);color:var(--paper)}
+  .tool:not(.on):hover{background:rgba(61,50,41,.08)}
+
+  /* ── 物件抽屜 ── */
+  #drawer{
+    position:fixed;left:50%;bottom:86px;transform:translateX(-50%);
+    display:none;gap:6px;padding:8px;border-radius:14px;
+    background:rgba(242,237,228,.92);box-shadow:0 6px 24px rgba(0,0,0,.3);
+    backdrop-filter:blur(6px);
+  }
+  #drawer.show{display:flex}
+  .obj-btn{
+    border:0;border-radius:10px;background:transparent;cursor:pointer;
+    padding:8px 11px;font-size:12px;color:var(--ink);font-family:inherit;
+    display:flex;flex-direction:column;align-items:center;gap:2px;
+  }
+  .obj-btn span.ic{font-size:22px}
+  .obj-btn:hover{background:rgba(61,50,41,.08)}
+  .obj-btn.picked{background:var(--ink);color:var(--paper)}
+
+  /* ── 選取物件的操作 ── */
+  #objctl{
+    position:fixed;right:16px;top:50%;transform:translateY(-50%);
+    display:none;flex-direction:column;gap:6px;padding:8px;border-radius:14px;
+    background:rgba(242,237,228,.92);box-shadow:0 6px 24px rgba(0,0,0,.3);
+  }
+  #objctl.show{display:flex}
+  #objctl button{
+    border:0;border-radius:10px;background:transparent;cursor:pointer;
+    width:44px;height:44px;font-size:18px;color:var(--ink);font-family:inherit;
+  }
+  #objctl button:hover{background:rgba(61,50,41,.08)}
+  #objctl .del{color:#a33}
+
+  /* ── 提示 ── */
+  #hint{
+    position:fixed;top:14px;right:18px;max-width:230px;text-align:right;
+    color:#e8ddc9;font-size:12px;line-height:1.7;opacity:.75;pointer-events:none;
+    letter-spacing:.05em;
+  }
+  #toast{
+    position:fixed;top:64px;left:50%;transform:translateX(-50%);
+    background:rgba(61,50,41,.92);color:#f2ede4;font-size:13px;
+    padding:8px 18px;border-radius:99px;opacity:0;transition:opacity .3s;
+    pointer-events:none;letter-spacing:.08em;
+  }
+  #toast.show{opacity:1}
+  @media (max-width:640px){
+    .tool{min-width:48px;padding:8px 8px;font-size:11px}
+    #hint{display:none}
+  }
+</style>
+</head>
+<body>
+<div id="scene"></div>
+
+<div id="title"><b>沙　盤</b>72 × 57 × 7 cm・雛形</div>
+<div id="hint">
+  視角模式：拖曳旋轉、滾輪縮放<br>
+  堆沙／挖沙：在沙面上拖曳<br>
+  點選盤中物件可移動與轉向
+</div>
+<div id="toast"></div>
+
+<div id="drawer">
+  <button class="obj-btn" data-kind="tree"><span class="ic">🌳</span>樹</button>
+  <button class="obj-btn" data-kind="pine"><span class="ic">🌲</span>松</button>
+  <button class="obj-btn" data-kind="person"><span class="ic">🧍</span>人</button>
+  <button class="obj-btn" data-kind="house"><span class="ic">🏠</span>房屋</button>
+  <button class="obj-btn" data-kind="rock"><span class="ic">🪨</span>岩石</button>
+  <button class="obj-btn" data-kind="boat"><span class="ic">⛵</span>小船</button>
+</div>
+
+<div id="toolbar">
+  <button class="tool on" data-mode="orbit"><span class="ic">👁</span>視角</button>
+  <button class="tool" data-mode="raise"><span class="ic">⛰</span>堆沙</button>
+  <button class="tool" data-mode="dig"><span class="ic">🌊</span>挖沙</button>
+  <button class="tool" data-mode="place"><span class="ic">✦</span>物件</button>
+  <button class="tool" id="exportBtn"><span class="ic">📷</span>匯出</button>
+</div>
+
+<div id="objctl">
+  <button id="rotL" title="左轉">⟲</button>
+  <button id="rotR" title="右轉">⟳</button>
+  <button id="delObj" class="del" title="移除">✕</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ══════════════════════════════════════════════
+   線上沙盤・縮減版雛形
+   國際規格 72×57×7（內側藍底），挖沙見水
+   ══════════════════════════════════════════════ */
+
+const W = 72, D = 57, WALL = 7;        // 沙盤內側尺寸（單位＝公分）
+const SEG_X = 120, SEG_Z = 96;         // 沙面網格解析度
+const SAND_TOP = 0;                    // 沙面預設高度
+const FLOOR = -5.6;                    // 藍底（可挖深度）
+const MAX_H = 7.5;                     // 堆沙上限
+
+let scene, camera, renderer, sand, sandGeo;
+let mode = 'orbit';
+let placeKind = null;
+let objects = [];
+let selected = null;
+
+/* ── 場景 ── */
+scene = new THREE.Scene();
+scene.background = new THREE.Color(0x241d17);
+scene.fog = new THREE.Fog(0x241d17, 160, 320);
+
+camera = new THREE.PerspectiveCamera(42, innerWidth/innerHeight, 0.5, 600);
+
+renderer = new THREE.WebGLRenderer({antialias:true, preserveDrawingBuffer:true});
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.getElementById('scene').appendChild(renderer.domElement);
+
+/* ── 光 ── */
+scene.add(new THREE.HemisphereLight(0xfff4e0, 0x5a4a3a, .55));
+const sun = new THREE.DirectionalLight(0xffeed8, .95);
+sun.position.set(-45, 70, 35);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048,2048);
+const sc = sun.shadow.camera;
+sc.left=-60; sc.right=60; sc.top=60; sc.bottom=-60; sc.far=220;
+scene.add(sun);
+
+/* ── 沙盤木框與藍底 ── */
+(function buildTray(){
+  const woodMat = new THREE.MeshStandardMaterial({color:0x4a3526, roughness:.85});
+  const woodTop = new THREE.MeshStandardMaterial({color:0x5c452f, roughness:.8});
+  const t = 2.4, h = WALL + 2.2, y = FLOOR + h/2;
+  const mk = (w,d,x,z)=>{
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), [woodMat,woodMat,woodTop,woodMat,woodMat,woodMat]);
+    m.position.set(x, y, z); m.castShadow = m.receiveShadow = true; scene.add(m);
+  };
+  mk(W+t*2, t, 0, -(D/2+t/2));
+  mk(W+t*2, t, 0,  (D/2+t/2));
+  mk(t, D, -(W/2+t/2), 0);
+  mk(t, D,  (W/2+t/2), 0);
+
+  // 藍底＝「水」：微波動的藍色平面
+  const waterGeo = new THREE.PlaneGeometry(W, D, 40, 32);
+  const water = new THREE.Mesh(waterGeo, new THREE.MeshStandardMaterial({
+    color:0x2f6f8f, roughness:.25, metalness:.1
+  }));
+  water.rotation.x = -Math.PI/2;
+  water.position.y = FLOOR + .4;
+  water.receiveShadow = true;
+  scene.add(water);
+  water.userData.base = waterGeo.attributes.position.array.slice();
+  window.__water = water;
+
+  // 內側藍色底板（水下）
+  const base = new THREE.Mesh(new THREE.PlaneGeometry(W,D),
+    new THREE.MeshStandardMaterial({color:0x1e4a63, roughness:.6}));
+  base.rotation.x = -Math.PI/2; base.position.y = FLOOR; scene.add(base);
+
+  // 桌面
+  const table = new THREE.Mesh(new THREE.PlaneGeometry(400,400),
+    new THREE.MeshStandardMaterial({color:0x2b221a, roughness:.95}));
+  table.rotation.x = -Math.PI/2; table.position.y = FLOOR - .01;
+  table.receiveShadow = true; scene.add(table);
+})();
+
+/* ── 沙面（高度場） ── */
+(function buildSand(){
+  sandGeo = new THREE.PlaneGeometry(W, D, SEG_X, SEG_Z);
+  sandGeo.rotateX(-Math.PI/2);
+  const pos = sandGeo.attributes.position;
+  // 起伏微噪
+  for(let i=0;i<pos.count;i++){
+    pos.setY(i, SAND_TOP + (Math.random()-.5)*.12);
+  }
+  const colors = new Float32Array(pos.count*3);
+  sandGeo.setAttribute('color', new THREE.BufferAttribute(colors,3));
+  const mat = new THREE.MeshStandardMaterial({
+    vertexColors:true, roughness:1, flatShading:false
+  });
+  sand = new THREE.Mesh(sandGeo, mat);
+  sand.castShadow = sand.receiveShadow = true;
+  scene.add(sand);
+  paintSand();
+})();
+
+/* 依高度上色：越低越藍（濕沙→水），越高越亮 */
+function paintSand(){
+  const pos = sandGeo.attributes.position, col = sandGeo.attributes.color;
+  const dry = new THREE.Color(0xdcc79c), lite = new THREE.Color(0xe9d9b4);
+  const wet = new THREE.Color(0xa9915f), blue = new THREE.Color(0x2f6f8f);
+  const c = new THREE.Color();
+  for(let i=0;i<pos.count;i++){
+    const h = pos.getY(i);
+    if(h <= FLOOR + 1.1){
+      c.copy(blue);                                    // 挖到底＝水色
+    }else if(h < -1.2){
+      const t = (h - (FLOOR+1.1)) / (-1.2 - (FLOOR+1.1));
+      c.copy(blue).lerp(wet, t);                       // 水緣→濕沙
+    }else if(h < 0.6){
+      const t = (h + 1.2)/1.8;
+      c.copy(wet).lerp(dry, t);                        // 濕沙→乾沙
+    }else{
+      const t = Math.min((h-0.6)/(MAX_H-0.6),1);
+      c.copy(dry).lerp(lite, t);                       // 沙丘亮部
+    }
+    // 細微顆粒感
+    const n = (Math.sin(i*12.9898)*43758.5453)%1;
+    const g = 1 + (n-.5)*.045;
+    col.setXYZ(i, c.r*g, c.g*g, c.b*g);
+  }
+  col.needsUpdate = true;
+  sandGeo.computeVertexNormals();
+}
+
+/* 取得某座標的沙面高度 */
+function sandHeightAt(x,z){
+  const gx = ((x + W/2)/W)*SEG_X, gz = ((z + D/2)/D)*SEG_Z;
+  const ix = Math.max(0,Math.min(SEG_X,Math.round(gx)));
+  const iz = Math.max(0,Math.min(SEG_Z,Math.round(gz)));
+  return sandGeo.attributes.position.getY(iz*(SEG_X+1)+ix);
+}
+
+/* 雕塑：高斯筆刷 */
+function sculpt(pt, dir){
+  const pos = sandGeo.attributes.position;
+  const R = 6.5, STR = .5*dir;
+  for(let i=0;i<pos.count;i++){
+    const dx = pos.getX(i)-pt.x, dz = pos.getZ(i)-pt.z;
+    const d2 = dx*dx+dz*dz;
+    if(d2 < R*R){
+      const f = Math.exp(-d2/(R*R*.28));
+      let h = pos.getY(i) + STR*f;
+      h = Math.max(FLOOR+.15, Math.min(MAX_H, h));
+      pos.setY(i,h);
+    }
+  }
+  pos.needsUpdate = true;
+  paintSand();
+  objects.forEach(dropToSand);
+}
+
+/* ══════════ 低多邊形物件 ══════════ */
+const M = (c,r=.9)=>new THREE.MeshStandardMaterial({color:c, roughness:r, flatShading:true});
+
+/* 頂點擾動→手作感 */
+function jitter(geo, amt){
+  const p = geo.attributes.position;
+  for(let i=0;i<p.count;i++){
+    p.setXYZ(i,
+      p.getX(i)+(Math.random()-.5)*amt,
+      p.getY(i)+(Math.random()-.5)*amt,
+      p.getZ(i)+(Math.random()-.5)*amt);
+  }
+  geo.computeVertexNormals();
+  return geo;
+}
+
+const builders = {
+  tree(){
+    const g = new THREE.Group();
+    const trunk = new THREE.Mesh(jitter(new THREE.CylinderGeometry(.55,.85,4.2,6),.16), M(0x5a3d28));
+    trunk.position.y = 2.1; g.add(trunk);
+    [[0,5.6,0,2.7],[1.6,4.8,.5,1.9],[-1.5,4.9,-.6,1.8],[.3,4.6,1.5,1.6]].forEach(([x,y,z,r])=>{
+      const b = new THREE.Mesh(jitter(new THREE.IcosahedronGeometry(r,0),.32), M(0x7fae52));
+      b.position.set(x,y,z); g.add(b);
+    });
+    return g;
+  },
+  pine(){
+    const g = new THREE.Group();
+    const trunk = new THREE.Mesh(new THREE.CylinderGeometry(.4,.6,1.6,5), M(0x4a3020));
+    trunk.position.y=.8; g.add(trunk);
+    [[1.4,2.6,3.1],[2.5,2.1,4.9],[3.9,1.6,6.4]].forEach(([y0,r,y])=>{
+      const c = new THREE.Mesh(jitter(new THREE.ConeGeometry(r,2.6,7),.14), M(0x2e5b3f));
+      c.position.y = y; g.add(c);
+    });
+    return g;
+  },
+  person(){
+    const g = new THREE.Group();
+    const skin = M(0xd8a878), shirt = M(0x4a7fa5), pants = M(0x3c4a63);
+    const legL = new THREE.Mesh(new THREE.CylinderGeometry(.28,.24,1.8,5), pants);
+    legL.position.set(-.32,.9,0); g.add(legL);
+    const legR = legL.clone(); legR.position.x=.32; g.add(legR);
+    const body = new THREE.Mesh(jitter(new THREE.CylinderGeometry(.62,.5,1.7,6),.06), shirt);
+    body.position.y=2.6; g.add(body);
+    const armL = new THREE.Mesh(new THREE.CylinderGeometry(.17,.15,1.5,5), shirt);
+    armL.position.set(-.82,2.6,0); armL.rotation.z=.18; g.add(armL);
+    const armR = armL.clone(); armR.position.x=.82; armR.rotation.z=-.18; g.add(armR);
+    const head = new THREE.Mesh(jitter(new THREE.IcosahedronGeometry(.5,1),.03), skin);
+    head.position.y=4.0; g.add(head);
+    const hair = new THREE.Mesh(new THREE.SphereGeometry(.52,6,4,0,Math.PI*2,0,1.25), M(0x2e2018));
+    hair.position.y=4.12; g.add(hair);
+    return g;
+  },
+  house(){
+    const g = new THREE.Group();
+    const wall = new THREE.Mesh(new THREE.BoxGeometry(4.6,3,3.8), M(0xe4d6b8));
+    wall.position.y=1.5; g.add(wall);
+    const roofGeo = new THREE.CylinderGeometry(0.01, 3.55, 2.3, 4, 1);
+    roofGeo.rotateY(Math.PI/4);
+    const roof = new THREE.Mesh(roofGeo, M(0xa5563c));
+    roof.position.y=4.15; roof.scale.set(1.05,1,.86); g.add(roof);
+    const door = new THREE.Mesh(new THREE.BoxGeometry(.9,1.7,.15), M(0x5a3d28));
+    door.position.set(0,0.85,1.95); g.add(door);
+    const win = new THREE.Mesh(new THREE.BoxGeometry(.85,.85,.12), M(0x9fc4d8,.4));
+    win.position.set(-1.3,1.8,1.95); g.add(win);
+    const win2 = win.clone(); win2.position.x=1.3; g.add(win2);
+    return g;
+  },
+  rock(){
+    const g = new THREE.Group();
+    const r1 = new THREE.Mesh(jitter(new THREE.IcosahedronGeometry(1.7,0),.4), M(0x8b8478));
+    r1.position.y=1.1; r1.rotation.set(.3,.7,.1); g.add(r1);
+    const r2 = new THREE.Mesh(jitter(new THREE.IcosahedronGeometry(1,0),.3), M(0x9a917f));
+    r2.position.set(1.6,.6,.6); g.add(r2);
+    return g;
+  },
+  boat(){
+    const g = new THREE.Group();
+    const hullGeo = new THREE.CylinderGeometry(1.1,.55,1.1,7,1);
+    hullGeo.scale(1,1,2.4); hullGeo.rotateY(Math.PI/2);
+    const hull = new THREE.Mesh(jitter(hullGeo,.06), M(0x8a5a3a));
+    hull.position.y=.55; g.add(hull);
+    const mast = new THREE.Mesh(new THREE.CylinderGeometry(.09,.09,3.4,5), M(0x5a3d28));
+    mast.position.y=2.3; g.add(mast);
+    const sailShape = new THREE.Shape();
+    sailShape.moveTo(0,0); sailShape.lineTo(0,2.6); sailShape.lineTo(1.7,.25); sailShape.lineTo(0,0);
+    const sail = new THREE.Mesh(new THREE.ShapeGeometry(sailShape), new THREE.MeshStandardMaterial({color:0xf0e8d5,side:THREE.DoubleSide,roughness:.9}));
+    sail.position.set(.1,1.15,0); g.add(sail);
+    return g;
+  }
+};
+
+function addObject(kind, x, z){
+  const g = builders[kind]();
+  g.traverse(o=>{ if(o.isMesh){o.castShadow=true; o.receiveShadow=true;} });
+  g.position.set(x, 0, z);
+  g.rotation.y = Math.random()*Math.PI*2;
+  g.userData.kind = kind;
+  dropToSand(g);
+  scene.add(g);
+  objects.push(g);
+  return g;
+}
+function dropToSand(g){
+  g.position.y = sandHeightAt(g.position.x, g.position.z) - .12;
+}
+
+/* ══════════ 相機軌道 ══════════ */
+let theta = .62, phi = .98, dist = 105;
+const target = new THREE.Vector3(0, -1, 0);
+function updateCamera(){
+  phi = Math.max(.18, Math.min(1.42, phi));
+  dist = Math.max(35, Math.min(220, dist));
+  camera.position.set(
+    target.x + dist*Math.sin(phi)*Math.sin(theta),
+    target.y + dist*Math.cos(phi),
+    target.z + dist*Math.sin(phi)*Math.cos(theta)
+  );
+  camera.lookAt(target);
+}
+updateCamera();
+
+/* ══════════ 互動 ══════════ */
+const ray = new THREE.Raycaster();
+const ndc = new THREE.Vector2();
+let dragging = false, dragObj = null, lastX=0, lastY=0, moved=false;
+let pinchD = 0;
+
+function toNDC(e){
+  const t = e.touches ? e.touches[0] : e;
+  ndc.x = (t.clientX/innerWidth)*2-1;
+  ndc.y = -(t.clientY/innerHeight)*2+1;
+  return {x:t.clientX, y:t.clientY};
+}
+function hitSand(){
+  ray.setFromCamera(ndc, camera);
+  const h = ray.intersectObject(sand);
+  return h.length ? h[0].point : null;
+}
+function hitObject(){
+  ray.setFromCamera(ndc, camera);
+  const h = ray.intersectObjects(objects, true);
+  if(!h.length) return null;
+  let o = h[0].object;
+  while(o.parent && !o.userData.kind) o = o.parent;
+  return o.userData.kind ? o : null;
+}
+
+function selectObj(o){
+  if(selected) setEmissive(selected, 0x000000);
+  selected = o;
+  if(o) setEmissive(o, 0x332211);
+  document.getElementById('objctl').classList.toggle('show', !!o);
+}
+function setEmissive(g, c){
+  g.traverse(m=>{ if(m.isMesh) m.material.emissive && m.material.emissive.setHex(c); });
+}
+
+function down(e){
+  if(e.touches && e.touches.length===2){
+    pinchD = Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+    return;
+  }
+  const p = toNDC(e);
+  lastX=p.x; lastY=p.y; dragging=true; moved=false;
+
+  // 任何模式下都可以點選物件
+  const o = hitObject();
+  if(o && mode!=='raise' && mode!=='dig'){
+    dragObj = o; selectObj(o); return;
+  }
+  if(mode==='place' && placeKind){
+    const pt = hitSand();
+    if(pt){ selectObj(addObject(placeKind, pt.x, pt.z)); moved=true; }
+    return;
+  }
+  if(mode==='raise'||mode==='dig'){
+    const pt = hitSand();
+    if(pt) sculpt(pt, mode==='raise'?1:-1);
+  }
+}
+function move(e){
+  if(e.touches && e.touches.length===2){
+    const d = Math.hypot(e.touches[0].clientX-e.touches[1].clientX, e.touches[0].clientY-e.touches[1].clientY);
+    dist *= pinchD/d; pinchD = d; updateCamera(); return;
+  }
+  if(!dragging) return;
+  e.preventDefault();
+  const p = toNDC(e);
+  const dx = p.x-lastX, dy = p.y-lastY;
+  if(Math.abs(dx)+Math.abs(dy)>2) moved=true;
+  lastX=p.x; lastY=p.y;
+
+  if(dragObj){
+    const pt = hitSand();
+    if(pt){
+      dragObj.position.x = Math.max(-W/2+1, Math.min(W/2-1, pt.x));
+      dragObj.position.z = Math.max(-D/2+1, Math.min(D/2-1, pt.z));
+      dropToSand(dragObj);
+    }
+    return;
+  }
+  if(mode==='raise'||mode==='dig'){
+    const pt = hitSand();
+    if(pt) sculpt(pt, mode==='raise'?1:-1);
+    return;
+  }
+  // orbit
+  theta -= dx*.0072; phi -= dy*.0072; updateCamera();
+}
+function up(){
+  if(!dragObj && !moved && mode==='orbit') selectObj(null);
+  dragging=false; dragObj=null;
+}
+renderer.domElement.addEventListener('mousedown', down);
+addEventListener('mousemove', move);
+addEventListener('mouseup', up);
+renderer.domElement.addEventListener('touchstart', down, {passive:false});
+renderer.domElement.addEventListener('touchmove', move, {passive:false});
+addEventListener('touchend', up);
+renderer.domElement.addEventListener('wheel', e=>{
+  e.preventDefault(); dist *= 1 + Math.sign(e.deltaY)*.08; updateCamera();
+},{passive:false});
+
+/* ══════════ UI ══════════ */
+const drawer = document.getElementById('drawer');
+document.querySelectorAll('.tool[data-mode]').forEach(b=>{
+  b.onclick = ()=>{
+    mode = b.dataset.mode;
+    document.querySelectorAll('.tool[data-mode]').forEach(x=>x.classList.toggle('on', x===b));
+    drawer.classList.toggle('show', mode==='place');
+    if(mode!=='place') placeKind=null;
+    toast({orbit:'拖曳旋轉視角，滾輪縮放',raise:'在沙面上拖曳堆高',dig:'在沙面上拖曳挖深，見到藍色即是水',place:'先選一個物件，再點沙面放置'}[mode]);
+  };
+});
+document.querySelectorAll('.obj-btn').forEach(b=>{
+  b.onclick = ()=>{
+    placeKind = b.dataset.kind;
+    document.querySelectorAll('.obj-btn').forEach(x=>x.classList.toggle('picked', x===b));
+  };
+});
+document.getElementById('rotL').onclick = ()=>{ if(selected) selected.rotation.y += Math.PI/12; };
+document.getElementById('rotR').onclick = ()=>{ if(selected) selected.rotation.y -= Math.PI/12; };
+document.getElementById('delObj').onclick = ()=>{
+  if(!selected) return;
+  scene.remove(selected);
+  objects = objects.filter(o=>o!==selected);
+  selectObj(null);
+};
+document.getElementById('exportBtn').onclick = ()=>{
+  renderer.render(scene,camera);
+  const a = document.createElement('a');
+  a.download = 'sandtray-'+new Date().toISOString().slice(0,10)+'.png';
+  a.href = renderer.domElement.toDataURL('image/png');
+  a.click();
+  toast('已匯出沙盤影像');
+};
+let toastT;
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(()=>t.classList.remove('show'), 2600);
+}
+
+/* ══════════ 水面微波 ══════════ */
+function animateWater(t){
+  const w = window.__water, p = w.geometry.attributes.position, b = w.userData.base;
+  for(let i=0;i<p.count;i++){
+    const x=b[i*3], y=b[i*3+1];
+    p.setZ(i, Math.sin(x*.35+t*.0012)*Math.cos(y*.3+t*.0009)*.16);
+  }
+  p.needsUpdate = true;
+}
+
+addEventListener('resize', ()=>{
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+(function loop(t){
+  requestAnimationFrame(loop);
+  animateWater(t||0);
+  renderer.render(scene, camera);
+})();
+</script>
+</body>
+</html>
