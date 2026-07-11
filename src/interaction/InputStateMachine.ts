@@ -148,18 +148,20 @@ export class InputStateMachine {
     this.armedDrag = null;
   }
 
-  onWheelZoom(factor: number): void {
-    this.deps.camera.zoom(factor);
+  onWheelZoom(factor: number, point: PointerPoint): void {
+    const hit = this.deps.raycast.hitSand(point.ndc);
+    this.deps.camera.zoomToward(hit, factor);
   }
 
-  onPinchZoom(factor: number): void {
+  onPinchZoom(factor: number, point: PointerPoint): void {
     const selected = this.deps.selection.selected;
     if (selected) {
       const next = selected.scale / factor;
       selected.scale = Math.max(OBJECT_MIN_SCALE, Math.min(OBJECT_MAX_SCALE, next));
       applyTransform(selected);
     } else {
-      this.deps.camera.zoom(factor);
+      const hit = this.deps.raycast.hitSand(point.ndc);
+      this.deps.camera.zoomToward(hit, factor);
     }
   }
 

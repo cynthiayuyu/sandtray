@@ -6,6 +6,18 @@ import { house } from './house';
 import { rock } from './rock';
 import { boat } from './boat';
 import { placeholder } from './placeholder';
+import { snake } from './snake';
+import { bird } from './bird';
+import { horse } from './horse';
+import { turtle } from './turtle';
+import { cross } from './cross';
+import { stupa } from './stupa';
+import { candle } from './candle';
+import { mushroomHouse } from './mushroomHouse';
+import { crystal } from './crystal';
+import { flower } from './flower';
+import { bridge } from './bridge';
+import { car } from './car';
 
 export type ProceduralBuilder = () => THREE.Group;
 
@@ -18,4 +30,16 @@ export const ProceduralBuilderRegistry: Record<string, ProceduralBuilder> = {
   rock,
   boat,
   placeholder,
+  snake,
+  bird,
+  horse,
+  turtle,
+  cross,
+  stupa,
+  candle,
+  mushroomHouse,
+  crystal,
+  flower,
+  bridge,
+  car,
 };

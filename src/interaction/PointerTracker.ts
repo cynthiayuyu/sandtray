@@ -10,9 +10,10 @@ export interface PointerHandlers {
   onDown(p: PointerPoint): void;
   onMove(p: PointerPoint): void;
   onUp(): void;
-  onWheelZoom(factor: number): void;
-  /** 雙指手勢的縮放比例（>1 手指分開/拉遠，<1 手指靠攏/拉近），由呼叫端決定要拿來縮鏡頭還是縮物件 */
-  onPinchZoom(factor: number): void;
+  /** factor: >1 拉遠、<1 拉近；point 為滾輪游標所在位置，用來支援「朝游標處縮放」 */
+  onWheelZoom(factor: number, point: PointerPoint): void;
+  /** 雙指手勢的縮放比例（>1 手指分開/拉遠，<1 手指靠攏/拉近），point 為兩指中點，由呼叫端決定要拿來縮鏡頭還是縮物件 */
+  onPinchZoom(factor: number, point: PointerPoint): void;
 }
 
 function toPoint(clientX: number, clientY: number): PointerPoint {
@@ -52,7 +53,11 @@ export function attachPointerTracker(el: HTMLElement, handlers: PointerHandlers)
         e.touches[0].clientX - e.touches[1].clientX,
         e.touches[0].clientY - e.touches[1].clientY,
       );
-      if (pinchDist > 0) handlers.onPinchZoom(pinchDist / d);
+      if (pinchDist > 0) {
+        const midX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        const midY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+        handlers.onPinchZoom(pinchDist / d, toPoint(midX, midY));
+      }
       pinchDist = d;
       return;
     }
@@ -75,7 +80,7 @@ export function attachPointerTracker(el: HTMLElement, handlers: PointerHandlers)
     'wheel',
     (e) => {
       e.preventDefault();
-      handlers.onWheelZoom(1 + Math.sign(e.deltaY) * 0.08);
+      handlers.onWheelZoom(1 + Math.sign(e.deltaY) * 0.08, toPoint(e.clientX, e.clientY));
     },
     { passive: false },
   );

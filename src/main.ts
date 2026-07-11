@@ -133,8 +133,8 @@ attachPointerTracker(renderer.domElement, {
   onDown: (p) => stateMachine.onDown(p),
   onMove: (p) => stateMachine.onMove(p),
   onUp: () => stateMachine.onUp(),
-  onWheelZoom: (f) => stateMachine.onWheelZoom(f),
-  onPinchZoom: (f) => stateMachine.onPinchZoom(f),
+  onWheelZoom: (f, p) => stateMachine.onWheelZoom(f, p),
+  onPinchZoom: (f, p) => stateMachine.onPinchZoom(f, p),
 });
 
 (function loop(t?: number) {

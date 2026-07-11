@@ -5,6 +5,8 @@ import {
   CAMERA_MAX_PHI,
   CAMERA_MIN_DIST,
   CAMERA_MAX_DIST,
+  TRAY_W,
+  TRAY_D,
 } from '../config/constants';
 
 /**
@@ -33,6 +35,22 @@ export class OrbitCamera {
   zoom(factor: number): void {
     this.dist *= factor;
     this.update();
+  }
+
+  /**
+   * 朝著游標/雙指中心點縮放：拉近時把視角中心（target）逐步移向該點，讓使用者可以
+   * 對著沙盤邊緣/角落放大細看，而不是永遠只能繞著沙盤正中央縮放。拉遠時則不移動
+   * target，避免視角中心被拖得太遠。hitPoint 為 null（游標沒有落在沙面上，例如
+   * 對著沙盤外的背景滾動）時退回原本的定點縮放。
+   */
+  zoomToward(hitPoint: THREE.Vector3 | null, factor: number): void {
+    if (hitPoint && factor < 1) {
+      const shift = 1 - factor;
+      this.target.lerp(hitPoint, shift);
+      this.target.x = Math.max(-TRAY_W / 2, Math.min(TRAY_W / 2, this.target.x));
+      this.target.z = Math.max(-TRAY_D / 2, Math.min(TRAY_D / 2, this.target.z));
+    }
+    this.zoom(factor);
   }
 
   private update(): void {

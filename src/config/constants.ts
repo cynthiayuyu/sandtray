@@ -14,7 +14,7 @@ export const MAX_H = 7.5; // 堆沙上限
 // 相機軌道夾限範圍
 export const CAMERA_MIN_PHI = 0.18;
 export const CAMERA_MAX_PHI = 1.42;
-export const CAMERA_MIN_DIST = 35;
+export const CAMERA_MIN_DIST = 14;
 export const CAMERA_MAX_DIST = 220;
 export const CAMERA_DEFAULT = { theta: 0.62, phi: 0.98, dist: 105 };
 
