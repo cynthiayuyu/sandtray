@@ -3,10 +3,17 @@ import type { PlacedObject } from '../objects/PlacedObject';
 export interface ObjectControlCallbacks {
   onRotate(dir: 1 | -1): void;
   onFlip(): void;
-  onLieDown(): void;
+  /** 循環切換立起／躺下（前後）／躺下（左右），見 PlacedObject.LieState */
+  onCycleLie(): void;
   onScale(dir: 1 | -1): void;
   onDelete(): void;
 }
+
+const LIE_TITLES: Record<PlacedObject['lieState'], string> = {
+  stand: '躺下',
+  lieX: '躺下（另一面／再點一下）',
+  lieZ: '立起',
+};
 
 /** 選取物件時顯示的側邊控制面板：旋轉／翻轉／躺下立起／縮放／刪除 */
 export class ObjectControlPanel {
@@ -24,7 +31,8 @@ export class ObjectControlPanel {
   show(placed: PlacedObject | null): void {
     this.el.classList.toggle('show', !!placed);
     if (placed) {
-      this.lieBtn.classList.toggle('active', placed.lyingDown);
+      this.lieBtn.classList.toggle('active', placed.lieState !== 'stand');
+      this.lieBtn.title = LIE_TITLES[placed.lieState];
       this.flipBtn.classList.toggle('active', placed.flipped);
     }
   }
@@ -37,7 +45,7 @@ export class ObjectControlPanel {
     this.el.append(rotL, rotR);
 
     this.flipBtn = mkBtn('⇋', '翻轉', () => this.callbacks.onFlip());
-    this.lieBtn = mkBtn('🛌', '躺下／立起', () => this.callbacks.onLieDown());
+    this.lieBtn = mkBtn('🛌', '躺下', () => this.callbacks.onCycleLie());
     this.el.append(this.flipBtn, this.lieBtn);
 
     const sep = document.createElement('div');

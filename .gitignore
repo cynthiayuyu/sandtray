@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# 原始素材包下載/解壓縮的暫存資料夾（體積過大，不進版控；
+# 挑選好的個別檔案會複製到 public/assets/models/ 才會被追蹤）
+/3D-pack
+/kenney-pack
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

@@ -82,14 +82,16 @@ const objectControlPanel = new ObjectControlPanel(objctlEl, {
     objectControlPanel.show(s);
     actionLog.emit({ type: 'object.transform', timestamp: Date.now(), placedId: s.id, flipped: s.flipped });
   },
-  onLieDown: () => {
+  onCycleLie: () => {
     const s = selection.selected;
     if (!s) return;
-    s.lyingDown = !s.lyingDown;
-    s.group.rotation.x = s.lyingDown ? Math.PI / 2 : 0;
+    const next: Record<typeof s.lieState, typeof s.lieState> = { stand: 'lieX', lieX: 'lieZ', lieZ: 'stand' };
+    s.lieState = next[s.lieState];
+    s.group.rotation.x = s.lieState === 'lieX' ? Math.PI / 2 : 0;
+    s.group.rotation.z = s.lieState === 'lieZ' ? Math.PI / 2 : 0;
     settleObject(s, raycast, sand);
     objectControlPanel.show(s);
-    actionLog.emit({ type: 'object.transform', timestamp: Date.now(), placedId: s.id, lyingDown: s.lyingDown });
+    actionLog.emit({ type: 'object.transform', timestamp: Date.now(), placedId: s.id, lieState: s.lieState });
   },
   onScale: (dir) => {
     const s = selection.selected;
@@ -135,6 +137,7 @@ attachPointerTracker(renderer.domElement, {
   onUp: () => stateMachine.onUp(),
   onWheelZoom: (f, p) => stateMachine.onWheelZoom(f, p),
   onPinchZoom: (f, p) => stateMachine.onPinchZoom(f, p),
+  onPan: (dx, dy) => stateMachine.onPan(dx, dy),
 });
 
 (function loop(t?: number) {

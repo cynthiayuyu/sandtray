@@ -53,6 +53,22 @@ export class OrbitCamera {
     this.zoom(factor);
   }
 
+  /**
+   * 平移視角中心：沿著目前水平朝向的右／前方向移動 target，而非繞著它旋轉或拉近拉遠。
+   * 讓使用者不必靠縮放就能看到沙盤其他區域。dx/dy 為螢幕像素位移，位移量隨 dist
+   * 縮放，這樣不論目前拉多近/多遠，同樣的拖曳距離感覺起來平移速度一致。
+   */
+  pan(dx: number, dy: number): void {
+    const panScale = this.dist * 0.0016;
+    const right = new THREE.Vector3(Math.cos(this.theta), 0, -Math.sin(this.theta));
+    const forward = new THREE.Vector3(Math.sin(this.theta), 0, Math.cos(this.theta));
+    this.target.addScaledVector(right, -dx * panScale);
+    this.target.addScaledVector(forward, dy * panScale);
+    this.target.x = Math.max(-TRAY_W / 2, Math.min(TRAY_W / 2, this.target.x));
+    this.target.z = Math.max(-TRAY_D / 2, Math.min(TRAY_D / 2, this.target.z));
+    this.update();
+  }
+
   private update(): void {
     this.phi = Math.max(CAMERA_MIN_PHI, Math.min(CAMERA_MAX_PHI, this.phi));
     this.dist = Math.max(CAMERA_MIN_DIST, Math.min(CAMERA_MAX_DIST, this.dist));

@@ -30,11 +30,15 @@ export interface InputStateMachineDeps {
 /**
  * 核心互動狀態機：管理模式（視角/堆沙/挖沙/物件）與點選/拖曳/疊放的判斷。
  *
- * 視角模式下的兩段式手勢是本次修正誤觸的重點：點一下未選取的物件只會「選取」，
+ * 視角模式下的兩段式手勢是誤觸修正的核心：點一下未選取的物件只會「選取」，
  * 不會立刻拖走；只有已經被選取的物件，接下來的拖曳才會真的搬動它。點在空沙面
- * （或另一個未選取物件）上且沒有位移，則清除/切換選取。物件模式（place）維持
- * 原本「點物件即可立刻拖曳」的行為，因為使用者在該模式下本來就是在操作物件，
- * 不像視角模式是隨手轉鏡頭。
+ * （或另一個未選取物件）上且沒有位移，則清除/切換選取。
+ *
+ * 物件模式（place）同樣延後判斷這次手勢的意圖到放開／移動超過閾值才決定，而不是
+ * 一按下就動作：純點擊（沒有位移）＋已選定物件種類 → 在該處放置（含疊放在既有物件
+ * 上）；點擊已存在的物件（沒有位移）→ 選取它；從空沙面開始拖曳 → 視為想轉視角，
+ * 不會誤放物件；從既有物件開始拖曳 → 搬動該物件。這樣使用者才能在物件模式下隨手
+ * 轉視角，而不會每次按下都多放一個物件。
  */
 export class InputStateMachine {
   mode: Mode = 'orbit';
@@ -45,6 +49,8 @@ export class InputStateMachine {
   private lastX = 0;
   private lastY = 0;
   private hitOnDown = false;
+  private downNdc: THREE.Vector2 | null = null;
+  private downHitPlaced: PlacedObject | null = null;
   private armedDrag: PlacedObject | null = null;
   private readonly deps: InputStateMachineDeps;
 
@@ -57,6 +63,7 @@ export class InputStateMachine {
     if (mode !== 'place') this.placeKind = null;
     this.dragging = false;
     this.armedDrag = null;
+    this.downHitPlaced = null;
   }
 
   onDown(p: PointerPoint): void {
@@ -66,6 +73,8 @@ export class InputStateMachine {
     this.moved = false;
     this.hitOnDown = false;
     this.armedDrag = null;
+    this.downNdc = p.ndc.clone();
+    this.downHitPlaced = null;
 
     if (this.mode === 'raise' || this.mode === 'dig') {
       const pt = this.deps.raycast.hitSand(p.ndc);
@@ -80,21 +89,19 @@ export class InputStateMachine {
     const hitPlaced = hitGroup ? this.deps.registry.getById(hitGroup.userData.placedId) ?? null : null;
     this.hitOnDown = !!hitPlaced;
 
-    if (this.mode === 'place' && this.placeKind) {
-      // 沙面永遠涵蓋整個沙盤，用它取得放置點的 XZ 座標；即使這次點擊落在既有物件上
-      // （例如要把人放到岩石上），settleObject 之後會用垂直 raycast 判斷該處其實該疊放在物件頂部。
-      const pt = this.deps.raycast.hitSand(p.ndc);
-      if (pt) void this.placeNewObject(this.placeKind, pt);
-      this.moved = true;
+    if (this.mode === 'place') {
+      // 延後決定：這次手勢究竟是「點擊放置/選取」還是「拖曳搬動既有物件/轉視角」，
+      // 要等 onMove 是否跨過位移閾值、或 onUp 沒有位移才知道，見 onMove/onUp。
+      this.downHitPlaced = hitPlaced;
       return;
     }
 
+    // 視角模式：既有的兩段式點選/拖曳邏輯
     if (hitPlaced) {
-      if (this.mode === 'place' || this.deps.selection.selected === hitPlaced) {
-        // 物件模式：立即可拖曳。視角模式且已選取：這次按住可以開始拖曳。
+      if (this.deps.selection.selected === hitPlaced) {
         this.armedDrag = hitPlaced;
       } else {
-        // 視角模式下點到「尚未選取」的物件：只選取，不拖曳（誤觸修正的核心）
+        // 點到「尚未選取」的物件：只選取，不拖曳（誤觸修正的核心）
         this.deps.selection.select(hitPlaced);
       }
     }
@@ -118,6 +125,11 @@ export class InputStateMachine {
     this.lastX = p.clientX;
     this.lastY = p.clientY;
 
+    if (!this.armedDrag && this.moved && this.mode === 'place' && this.downHitPlaced) {
+      // 物件模式下，拖曳起點在既有物件上：跨過閾值後才確定是要搬動它，而不是放置新物件
+      this.armedDrag = this.downHitPlaced;
+    }
+
     if (this.armedDrag) {
       const pt = this.deps.raycast.hitSand(p.ndc);
       if (pt) {
@@ -136,16 +148,31 @@ export class InputStateMachine {
       return;
     }
 
-    // 視角軌道：物件模式沒有選中拖曳目標時，或視角模式下沒有已選取物件被按住時，都走這裡
+    // 視角軌道：沒有拖曳目標時都走這裡（含物件模式下從空沙面開始的拖曳）
     this.deps.camera.applyDelta(dx, dy);
   }
 
   onUp(): void {
-    if (this.mode === 'orbit' && !this.moved && !this.hitOnDown) {
-      this.deps.selection.select(null);
+    if (!this.moved) {
+      if (this.mode === 'place' && this.placeKind && this.downNdc) {
+        // 純點擊＋已選定物件種類：在該處放置（含疊放在既有物件上，見 placeNewObject/settleObject）
+        const pt = this.deps.raycast.hitSand(this.downNdc);
+        if (pt) void this.placeNewObject(this.placeKind, pt);
+      } else if (this.mode === 'place' && this.downHitPlaced) {
+        // 物件模式下純點擊既有物件（沒有選定新種類）：選取它，方便用控制面板操作
+        this.deps.selection.select(this.downHitPlaced);
+      } else if (this.mode === 'orbit' && !this.hitOnDown) {
+        this.deps.selection.select(null);
+      }
     }
     this.dragging = false;
     this.armedDrag = null;
+    this.downHitPlaced = null;
+  }
+
+  /** 平移視角中心（右鍵拖曳／Shift+拖曳／雙指拖曳），與旋轉/縮放獨立 */
+  onPan(dx: number, dy: number): void {
+    this.deps.camera.pan(dx, dy);
   }
 
   onWheelZoom(factor: number, point: PointerPoint): void {
