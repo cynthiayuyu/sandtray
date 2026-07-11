@@ -70,9 +70,15 @@ src/
 
 這代表未來要接上 Quaternius、Kenney 等 CC0 低多邊形素材包時，只需要在 `catalog/catalog.data.ts` 新增資料（`visualSource: {type:'gltf', url:'assets/models/xxx.glb'}`），完全不用動任何互動或 UI 程式碼。GLTF 載入失敗（本期故意放了一筆指向不存在檔案的示範項目 `demo_gltf_tree` 來驗證這條路徑）時，`ObjectFactory` 會 fallback 到程序化的 `placeholder` 物件並跳出提示，讓物件庫即使部分素材缺失也不會壞掉。
 
-### GLB 素材（本期未附真實檔案）
+### GLB 素材
 
-`public/assets/models/` 保留給未來的 GLB/GLTF 檔案，本次刻意不下載任何真實素材——下載檔案屬於需要另外逐一取得使用者同意的動作。之後要擴充物件庫時，流程是：取得授權允許的 CC0 低多邊形素材（例如 Quaternius、Kenney）→ 放進 `public/assets/models/` → 在 `catalog/catalog.data.ts` 新增對應的 `CatalogEntry`。人物／動物類別建議優先換成外部模型，因為程序化建構器對有機造型的呈現能力有限。
+`public/assets/models/` 底下依素材包分資料夾（`kenney-mini-characters/`、`kenney-nature/`、`kenney-graveyard/`、`kenney-mini-dungeon/`、`kenney-survival/`、`kenney-watercraft/`、`quaternius-animals/`），目前放了一批 CC0 授權的低多邊形模型（來自 Kenney.nl 與 Quaternius，涵蓋人物/動物/植物/自然物/建築/交通工具/宗教神話/幻想生物），對應到 `catalog/catalog.data.ts` 裡標示「（模型）」或明確物件名稱（如「橡樹（模型）」「幽靈」）的項目。
+
+**為什麼是「依素材包」分資料夾，而不是依物件分類分資料夾**：Kenney 的部分素材包（mini-characters、graveyard-kit、mini-dungeon、survival-kit、watercraft-pack）用一張共用的材質圖 `Textures/colormap.png`（相對於 `.glb` 檔案本身的路徑）貼所有模型；如果把不同素材包的模型混放進同一個依「分類」命名的資料夾（例如把 graveyard-kit 的骷髏和 mini-dungeon 的半獸人都放進 `fantasy/`），兩包各自的 `Textures/colormap.png` 會互相覆蓋、貼錯材質。依素材包分資料夾可以讓每包自帶的材質圖路徑维持正確，不同分類的物件依然可以透過 `catalog.data.ts` 的 `category` 欄位自由歸類，跟實際檔案擺放位置無關。
+
+之後要繼續擴充：取得授權允許的 CC0 低多邊形素材 → 放進 `public/assets/models/<素材包名稱>/`（記得連同該素材包引用的外部材質/貼圖一起複製，材質遺失時 GLTFLoader 只會在 console 印警告、模型仍會載入但貼圖是空的）→ 在 `catalog/catalog.data.ts` 新增對應的 `CatalogEntry`。`demo_gltf_tree` 這筆項目仍保留、故意指向不存在的檔案，用來驗證「載入失敗→優雅降級為佔位符」這條路徑沒有被後續的真實素材蓋掉。
+
+已知取捨：Quaternius 的動物模型（`quaternius-animals/`）因為內嵌了動畫資料，單檔約 3MB，比其他幾KB～數百KB的素材重不少；目前沒有播放動畫（GLTFLoader 只取靜態姿勢），之後如果要瘦身，可以用 gltf-transform 之類的工具把動畫軌道剝除。
 
 ### 視角模式的點選/拖曳/疊放互動狀態機
 
@@ -105,7 +111,7 @@ src/
 
 ## 已知限制與後續工作
 
-- GLB 素材架構已就緒，但尚未填入真實的 Quaternius／Kenney 等素材包內容（見〈GLB 素材〉）
+- GLB 素材已填入一批 Quaternius／Kenney 的 CC0 低多邊形模型（見〈GLB 素材〉），但仍只是初步挑選，可能需要依實際使用再調整每個模型的 `visualSource.scale`（可用物件控制面板的縮放鈕暫時手動修正）
 - 視角模式的兩段式選取手勢是待與治療師實測驗證的 UX 決策，不是定案
 - 旋轉/翻轉/躺下的離散控制集是刻意的簡化，如果之後發現需要更自由的擺放角度，需要重新評估要不要導入 gizmo 型互動
 - 水面反光目前用 PMREM 生成的簡易環境貼圖 + `MeshPhysicalMaterial` 的 clearcoat，不是即時反射/折射管線；如果之後想要更真實的水面效果，可以評估 `THREE.Reflector` 之類的做法，但要留意效能成本
