@@ -78,7 +78,7 @@ src/
 
 之後要繼續擴充：取得授權允許的 CC0 低多邊形素材 → 放進 `public/assets/models/<素材包名稱>/`（記得連同該素材包引用的外部材質/貼圖一起複製，材質遺失時 GLTFLoader 只會在 console 印警告、模型仍會載入但貼圖是空的）→ 在 `catalog/catalog.data.ts` 新增對應的 `CatalogEntry`。`demo_gltf_tree` 這筆項目仍保留、故意指向不存在的檔案，用來驗證「載入失敗→優雅降級為佔位符」這條路徑沒有被後續的真實素材蓋掉。
 
-已知取捨：Quaternius 的動物模型（`quaternius-animals/`）因為內嵌了動畫資料，單檔約 3MB，比其他幾KB～數百KB的素材重不少；目前沒有播放動畫（GLTFLoader 只取靜態姿勢），之後如果要瘦身，可以用 gltf-transform 之類的工具把動畫軌道剝除。
+Quaternius 的動物模型原始檔內嵌動畫與骨架資料（單檔約 3.4MB，且高頂點數的 SkinnedMesh 會讓拖曳時的 raycast 明顯卡頓），因此進專案前先用 `scripts/strip-animations.mjs`（基於 @gltf-transform）剝除動畫/骨架並減面，縮到單檔約 80-100KB 的輕量靜態模型。之後要再加入有動畫的素材時，都建議先跑一次這個腳本：`node scripts/strip-animations.mjs <輸入.gltf> <輸出.glb>`。腳本裡有一個關鍵細節：`anim.dispose()` 不會連帶清掉 sampler，必須先逐一 dispose channel/sampler，否則動畫關鍵影格的 accessor 會全部殘留（單檔多出 1MB+）。
 
 ### 視角模式的點選/拖曳/疊放互動狀態機
 

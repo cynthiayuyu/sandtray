@@ -52,6 +52,7 @@ export class InputStateMachine {
   private downNdc: THREE.Vector2 | null = null;
   private downHitPlaced: PlacedObject | null = null;
   private armedDrag: PlacedObject | null = null;
+  private placing = false;
   private readonly deps: InputStateMachineDeps;
 
   constructor(deps: InputStateMachineDeps) {
@@ -154,13 +155,14 @@ export class InputStateMachine {
 
   onUp(): void {
     if (!this.moved) {
-      if (this.mode === 'place' && this.placeKind && this.downNdc) {
-        // 純點擊＋已選定物件種類：在該處放置（含疊放在既有物件上，見 placeNewObject/settleObject）
+      if (this.mode === 'place' && this.downHitPlaced) {
+        // 物件模式下純點擊「既有物件」：一律優先選取它，而不是在它上面再放一個新的——
+        // 使用者點已放好的模型多半是想選取/調整，要疊放可以點該物件旁邊的沙面再拖上去
+        this.deps.selection.select(this.downHitPlaced);
+      } else if (this.mode === 'place' && this.placeKind && this.downNdc && !this.placing) {
+        // 純點擊空沙面＋已選定物件種類：放置。placing 旗標防止模型載入中連點造成排隊重複放置
         const pt = this.deps.raycast.hitSand(this.downNdc);
         if (pt) void this.placeNewObject(this.placeKind, pt);
-      } else if (this.mode === 'place' && this.downHitPlaced) {
-        // 物件模式下純點擊既有物件（沒有選定新種類）：選取它，方便用控制面板操作
-        this.deps.selection.select(this.downHitPlaced);
       } else if (this.mode === 'orbit' && !this.hitOnDown) {
         this.deps.selection.select(null);
       }
@@ -195,6 +197,7 @@ export class InputStateMachine {
   private async placeNewObject(kindId: string, pt: THREE.Vector3): Promise<void> {
     const entry = findEntry(kindId);
     if (!entry) return;
+    this.placing = true;
     const isAsync = entry.visualSource.type === 'gltf';
     if (isAsync) this.deps.onPlacingStateChange?.(true);
     try {
@@ -218,6 +221,7 @@ export class InputStateMachine {
       this.deps.actionLog.emit({ type: 'object.place', timestamp: Date.now(), placedId: placed.id, kindId });
       this.deps.onObjectPlaced?.(placed);
     } finally {
+      this.placing = false;
       if (isAsync) this.deps.onPlacingStateChange?.(false);
     }
   }

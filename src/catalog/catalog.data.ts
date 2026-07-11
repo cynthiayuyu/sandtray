@@ -197,7 +197,7 @@ export const catalogData: CatalogEntry[] = [
     label: '馬（模型）',
     keywords: ['馬', 'horse'],
     icon: '🐎',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/horse.gltf', scale: 2.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/horse.glb', scale: 2.5 },
   },
   {
     id: 'animal_fox_glb',
@@ -205,7 +205,7 @@ export const catalogData: CatalogEntry[] = [
     label: '狐狸',
     keywords: ['狐狸', 'fox'],
     icon: '🦊',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/fox.gltf', scale: 2.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/fox.glb', scale: 2.5 },
   },
   {
     id: 'animal_wolf_glb',
@@ -213,7 +213,7 @@ export const catalogData: CatalogEntry[] = [
     label: '狼',
     keywords: ['狼', 'wolf'],
     icon: '🐺',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/wolf.gltf', scale: 2.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/wolf.glb', scale: 2.5 },
   },
   {
     id: 'animal_deer_glb',
@@ -221,7 +221,7 @@ export const catalogData: CatalogEntry[] = [
     label: '鹿',
     keywords: ['鹿', 'deer'],
     icon: '🦌',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/deer.gltf', scale: 2.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/deer.glb', scale: 2.5 },
   },
   {
     id: 'animal_dog_glb',
@@ -229,7 +229,7 @@ export const catalogData: CatalogEntry[] = [
     label: '狗',
     keywords: ['狗', '犬', 'dog', 'husky'],
     icon: '🐕',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/husky.gltf', scale: 2.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/husky.glb', scale: 2.5 },
   },
   {
     id: 'plant_oak_glb',
@@ -350,5 +350,189 @@ export const catalogData: CatalogEntry[] = [
     keywords: ['半獸人', '獸人', 'orc'],
     icon: '👹',
     visualSource: { type: 'gltf', url: 'assets/models/kenney-mini-dungeon/character-orc.glb', scale: 2.2 },
+  },
+
+  // 人物（第二批）
+  {
+    id: 'person_male_b_glb',
+    category: 'person',
+    label: '男人 2',
+    keywords: ['男人', '男性', 'man'],
+    icon: '👨‍🦱',
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-mini-characters/character-male-b.glb', scale: 2.2 },
+  },
+  {
+    id: 'person_female_b_glb',
+    category: 'person',
+    label: '女人 2',
+    keywords: ['女人', '女性', 'woman'],
+    icon: '👩‍🦰',
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-mini-characters/character-female-b.glb', scale: 2.2 },
+  },
+  {
+    id: 'person_wheelchair_glb',
+    category: 'person',
+    label: '輪椅',
+    keywords: ['輪椅', 'wheelchair'],
+    icon: '🦽',
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-mini-characters/wheelchair.glb', scale: 2.2 },
+  },
+
+  // 動物（第二批）
+  {
+    id: 'animal_cow_glb',
+    category: 'animal',
+    label: '乳牛',
+    keywords: ['牛', '乳牛', 'cow'],
+    icon: '🐄',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/cow.glb', scale: 2.5 },
+  },
+  {
+    id: 'animal_alpaca_glb',
+    category: 'animal',
+    label: '羊駝',
+    keywords: ['羊駝', '草泥馬', 'alpaca'],
+    icon: '🦙',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/alpaca.glb', scale: 2.5 },
+  },
+  {
+    id: 'animal_donkey_glb',
+    category: 'animal',
+    label: '驢子',
+    keywords: ['驢', '驢子', 'donkey'],
+    icon: '🫏',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/donkey.glb', scale: 2.5 },
+  },
+  {
+    id: 'animal_stag_glb',
+    category: 'animal',
+    label: '雄鹿',
+    keywords: ['鹿', '雄鹿', 'stag'],
+    icon: '🦌',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/stag.glb', scale: 2.5 },
+  },
+
+  // 植物（第二批）
+  {
+    id: 'plant_palm_glb',
+    category: 'plant',
+    label: '棕櫚樹',
+    keywords: ['棕櫚', '椰子樹', 'palm'],
+    icon: '🌴',
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/tree_palm.glb', scale: 5 },
+  },
+  {
+    id: 'plant_bush_glb',
+    category: 'plant',
+    label: '灌木',
+    keywords: ['灌木', '樹叢', 'bush'],
+    icon: '🌿',
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/plant_bush.glb', scale: 4 },
+  },
+
+  // 自然物（第二批）
+  {
+    id: 'natural_campfire_glb',
+    category: 'natural',
+    label: '營火',
+    keywords: ['營火', '火堆', '火', 'campfire', 'fire'],
+    icon: '🔥',
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/campfire_stones.glb', scale: 4 },
+  },
+  {
+    id: 'natural_mountain_glb',
+    category: 'natural',
+    label: '山',
+    keywords: ['山', '高山', 'mountain'],
+    icon: '⛰️',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-fantasy-rts/mountain.gltf', scale: 1.2 },
+  },
+
+  // 建築（第二批）
+  {
+    id: 'building_fantasy_house_glb',
+    category: 'building',
+    label: '小屋（模型）',
+    keywords: ['小屋', '房屋', '茅屋', 'house', 'hut'],
+    icon: '🛖',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-fantasy-rts/house.gltf', scale: 1.2 },
+  },
+  {
+    id: 'building_fence_glb',
+    category: 'building',
+    label: '圍籬',
+    keywords: ['圍籬', '柵欄', '籬笆', 'fence'],
+    icon: '🚧',
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/fence_simple.glb', scale: 4 },
+  },
+
+  // 交通工具（第二批）
+  {
+    id: 'vehicle_sedan_glb',
+    category: 'vehicle',
+    label: '轎車',
+    keywords: ['轎車', '汽車', '車', 'car', 'sedan'],
+    icon: '🚙',
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-car-kit/sedan.glb', scale: 2.2 },
+  },
+  {
+    id: 'vehicle_ambulance_glb',
+    category: 'vehicle',
+    label: '救護車',
+    keywords: ['救護車', 'ambulance'],
+    icon: '🚑',
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-car-kit/ambulance.glb', scale: 2.2 },
+  },
+  {
+    id: 'vehicle_rowboat_glb',
+    category: 'vehicle',
+    label: '划艇',
+    keywords: ['划艇', '小船', 'rowboat'],
+    icon: '🚣',
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-watercraft/boat-row-small.glb', scale: 2.5 },
+  },
+
+  // 宗教／神話（第二批）
+  {
+    id: 'religious_gravestone_glb',
+    category: 'religious_mythical',
+    label: '墓碑',
+    keywords: ['墓碑', '墓', 'gravestone', 'grave'],
+    icon: '🪦',
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/gravestone-round.glb', scale: 2.2 },
+  },
+  {
+    id: 'religious_obelisk_glb',
+    category: 'religious_mythical',
+    label: '方尖碑',
+    keywords: ['方尖碑', '石柱', 'obelisk'],
+    icon: '🗿',
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/pillar-obelisk.glb', scale: 2.2 },
+  },
+  {
+    id: 'religious_lantern_glb',
+    category: 'religious_mythical',
+    label: '燈籠',
+    keywords: ['燈籠', '燈', 'lantern'],
+    icon: '🏮',
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/lantern-candle.glb', scale: 2.2 },
+  },
+
+  // 幻想生物（第二批）
+  {
+    id: 'fantasy_vampire_glb',
+    category: 'fantasy',
+    label: '吸血鬼',
+    keywords: ['吸血鬼', 'vampire'],
+    icon: '🧛',
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/character-vampire.glb', scale: 2.2 },
+  },
+  {
+    id: 'fantasy_zombie_glb',
+    category: 'fantasy',
+    label: '殭屍',
+    keywords: ['殭屍', '喪屍', 'zombie'],
+    icon: '🧟',
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/character-zombie.glb', scale: 2.2 },
   },
 ];

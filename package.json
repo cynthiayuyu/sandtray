@@ -10,7 +10,10 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@gltf-transform/core": "^4.4.1",
+    "@gltf-transform/functions": "^4.4.1",
     "@types/three": "^0.185.1",
+    "meshoptimizer": "^1.2.0",
     "typescript": "~6.0.2",
     "vite": "^8.1.1"
   },

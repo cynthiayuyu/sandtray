@@ -28,6 +28,13 @@ export class GltfObjectLoader {
       this.cache.set(url, pending);
     }
     const cached = await pending;
-    return cached.clone(true);
+    const instance = cached.clone(true);
+    // clone(true) 會共用材質：若不逐一複製，選取高亮（emissive）會同時染到同款模型的所有分身
+    instance.traverse((o) => {
+      if (o instanceof THREE.Mesh) {
+        o.material = Array.isArray(o.material) ? o.material.map((m) => m.clone()) : o.material.clone();
+      }
+    });
+    return instance;
   }
 }
