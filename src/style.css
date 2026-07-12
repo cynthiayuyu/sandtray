@@ -88,19 +88,18 @@ canvas {
   background: rgba(61, 50, 41, 0.08);
 }
 
-/* ── 物件抽屜 ── */
+/* ── 物件面板：靠左直立，避免蓋住沙盤主體 ── */
 #drawer {
   position: fixed;
-  left: 50%;
-  bottom: 86px;
-  transform: translateX(-50%);
+  left: 16px;
+  top: 64px;
+  bottom: 90px;
   display: none;
   flex-direction: column;
   gap: 6px;
   padding: 10px;
   border-radius: 14px;
-  width: min(560px, 92vw);
-  max-height: 52vh;
+  width: min(300px, 42vw);
   background: rgba(242, 237, 228, 0.94);
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(6px);
@@ -125,9 +124,8 @@ canvas {
 }
 #drawer .tabs {
   display: flex;
+  flex-wrap: wrap; /* 直立面板寬度有限，分類頁籤改為換行排列 */
   gap: 4px;
-  overflow-x: auto;
-  scrollbar-width: none;
   flex: none;
 }
 #drawer .tabs::-webkit-scrollbar {
@@ -236,6 +234,35 @@ canvas {
   margin: 2px 4px;
 }
 
+/* ── 匯出視角選單 ── */
+#exportmenu {
+  position: fixed;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px;
+  border-radius: 12px;
+  background: rgba(242, 237, 228, 0.96);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(6px);
+  z-index: 10;
+}
+#exportmenu button {
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  padding: 8px 16px;
+  font-size: 13px;
+  color: var(--ink);
+  font-family: inherit;
+  white-space: nowrap;
+}
+#exportmenu button:hover {
+  background: rgba(61, 50, 41, 0.08);
+}
+
 /* ── 提示 ── */
 #hint {
   position: fixed;
@@ -280,7 +307,13 @@ canvas {
   #hint {
     display: none;
   }
+  /* 手機螢幕太窄，物件面板改回下方板（高度縮小以免蓋掉沙盤） */
   #drawer {
+    left: 8px;
+    right: 8px;
+    top: auto;
     bottom: 82px;
+    width: auto;
+    max-height: 38vh;
   }
 }

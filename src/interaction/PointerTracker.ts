@@ -16,6 +16,12 @@ export interface PointerHandlers {
   onPinchZoom(factor: number, point: PointerPoint): void;
   /** 平移視角中心的螢幕像素位移（右鍵拖曳／Shift+拖曳／雙指拖曳觸發） */
   onPan(dx: number, dy: number): void;
+  /**
+   * 是否反轉滑鼠滾輪與右鍵拖曳的方向。macOS 的「自然捲動」設定會讓滾輪方向與
+   * 傳統滑鼠相反，使用者可用 UI 開關切換，不用去改系統設定。只影響滑鼠事件，
+   * 觸控手勢（雙指縮放/平移）方向本來就跟著手指走，不受此設定影響。
+   */
+  isScrollInverted(): boolean;
 }
 
 function toPoint(clientX: number, clientY: number): PointerPoint {
@@ -79,7 +85,8 @@ export function attachPointerTracker(el: HTMLElement, handlers: PointerHandlers)
       return;
     }
     if (panning && !('touches' in e)) {
-      handlers.onPan(e.clientX - panLastX, e.clientY - panLastY);
+      const dir = handlers.isScrollInverted() ? -1 : 1;
+      handlers.onPan((e.clientX - panLastX) * dir, (e.clientY - panLastY) * dir);
       panLastX = e.clientX;
       panLastY = e.clientY;
       return;
@@ -105,7 +112,8 @@ export function attachPointerTracker(el: HTMLElement, handlers: PointerHandlers)
     'wheel',
     (e) => {
       e.preventDefault();
-      handlers.onWheelZoom(1 + Math.sign(e.deltaY) * 0.08, toPoint(e.clientX, e.clientY));
+      const dir = handlers.isScrollInverted() ? -1 : 1;
+      handlers.onWheelZoom(1 + Math.sign(e.deltaY) * dir * 0.08, toPoint(e.clientX, e.clientY));
     },
     { passive: false },
   );

@@ -1,6 +1,7 @@
 export type Category =
   | 'person'
-  | 'animal'
+  | 'animal_land'
+  | 'animal_water'
   | 'plant'
   | 'building'
   | 'vehicle'
@@ -10,7 +11,8 @@ export type Category =
 
 export const CATEGORY_ORDER: Category[] = [
   'person',
-  'animal',
+  'animal_land',
+  'animal_water',
   'plant',
   'building',
   'vehicle',
@@ -21,13 +23,14 @@ export const CATEGORY_ORDER: Category[] = [
 
 export const CATEGORY_LABELS: Record<Category, string> = {
   person: '人物',
-  animal: '動物',
+  animal_land: '陸地動物',
+  animal_water: '水生動物',
   plant: '植物',
   building: '建築',
   vehicle: '交通工具',
   natural: '自然物',
   religious_mythical: '宗教／神話',
-  fantasy: '幻想生物',
+  fantasy: '幻想',
 };
 
 export type VisualSource =

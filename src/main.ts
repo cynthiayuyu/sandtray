@@ -1,4 +1,5 @@
 import './style.css';
+import * as THREE from 'three';
 import { createSceneBundle } from './scene/SceneSetup';
 import { buildTray } from './scene/TrayBuilder';
 import { WaterSurface } from './scene/WaterSurface';
@@ -15,7 +16,7 @@ import { NoopActionLogSink } from './history/ActionLog';
 import { exportPng } from './export/PngExporter';
 import { Toast } from './ui/Toast';
 import { HintPanel } from './ui/HintPanel';
-import { Toolbar, toastForMode } from './ui/Toolbar';
+import { Toolbar, toastForMode, type ExportView } from './ui/Toolbar';
 import { ObjectDrawer } from './ui/ObjectDrawer';
 import { ObjectControlPanel } from './ui/ObjectControlPanel';
 import { OBJECT_SCALE_STEP } from './config/constants';
@@ -125,12 +126,43 @@ function applyMode(mode: Mode): void {
   toast.show(toastForMode(mode));
 }
 
+// macOS 自然捲動使用者的滾輪/右鍵拖曳方向反轉設定（persist 在 localStorage）
+const INVERT_KEY = 'sandtray.invertScroll';
+let invertScroll = localStorage.getItem(INVERT_KEY) === '1';
+
+// 匯出視角預設（theta=方位角, phi=仰角, dist=距離；沙盤記錄慣例是多方位拍攝）
+const EXPORT_VIEWS: Record<Exclude<ExportView, 'current'>, { theta: number; phi: number; dist: number }> = {
+  top: { theta: 0, phi: 0.06, dist: 95 },
+  isoLeft: { theta: Math.PI / 4, phi: 0.9, dist: 105 },
+  isoRight: { theta: -Math.PI / 4, phi: 0.9, dist: 105 },
+};
+
+function exportWithView(view: ExportView): void {
+  if (view !== 'current') {
+    const v = EXPORT_VIEWS[view];
+    const target = new THREE.Vector3(0, -1, 0);
+    camera.position.set(
+      target.x + v.dist * Math.sin(v.phi) * Math.sin(v.theta),
+      target.y + v.dist * Math.cos(v.phi),
+      target.z + v.dist * Math.sin(v.phi) * Math.cos(v.theta),
+    );
+    camera.lookAt(target);
+  }
+  exportPng(renderer, scene, camera);
+  orbitCamera.refresh(); // 還原使用者原本的視角
+  toast.show('已匯出沙盤影像');
+}
+
 new Toolbar(document.getElementById('toolbar')!, {
   onModeChange: applyMode,
-  onExport: () => {
-    exportPng(renderer, scene, camera);
-    toast.show('已匯出沙盤影像');
+  onExport: exportWithView,
+  onToggleInvertScroll: () => {
+    invertScroll = !invertScroll;
+    localStorage.setItem(INVERT_KEY, invertScroll ? '1' : '0');
+    toast.show(invertScroll ? '已反轉滾輪與右鍵拖曳方向' : '已恢復預設滾動方向');
+    return invertScroll;
   },
+  isScrollInverted: () => invertScroll,
 });
 applyMode('orbit');
 
@@ -141,6 +173,7 @@ attachPointerTracker(renderer.domElement, {
   onWheelZoom: (f, p) => stateMachine.onWheelZoom(f, p),
   onPinchZoom: (f, p) => stateMachine.onPinchZoom(f, p),
   onPan: (dx, dy) => stateMachine.onPan(dx, dy),
+  isScrollInverted: () => invertScroll,
 });
 
 (function loop(t?: number) {

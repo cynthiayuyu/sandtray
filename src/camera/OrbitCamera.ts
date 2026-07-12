@@ -69,6 +69,11 @@ export class OrbitCamera {
     this.update();
   }
 
+  /** 依目前的軌道狀態重新套用相機位置（匯出功能暫時移動相機拍照後，用這個還原） */
+  refresh(): void {
+    this.update();
+  }
+
   private update(): void {
     this.phi = Math.max(CAMERA_MIN_PHI, Math.min(CAMERA_MAX_PHI, this.phi));
     this.dist = Math.max(CAMERA_MIN_DIST, Math.min(CAMERA_MAX_DIST, this.dist));

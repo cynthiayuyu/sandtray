@@ -49,7 +49,7 @@ export const catalogData: CatalogEntry[] = [
   // 動物
   {
     id: 'animal_snake',
-    category: 'animal',
+    category: 'animal_land',
     label: '蛇',
     keywords: ['蛇', 'snake'],
     icon: '🐍',
@@ -57,7 +57,7 @@ export const catalogData: CatalogEntry[] = [
   },
   {
     id: 'animal_bird',
-    category: 'animal',
+    category: 'animal_land',
     label: '鳥',
     keywords: ['鳥', '小鳥', 'bird'],
     icon: '🐦',
@@ -65,7 +65,7 @@ export const catalogData: CatalogEntry[] = [
   },
   {
     id: 'animal_turtle',
-    category: 'animal',
+    category: 'animal_water',
     label: '烏龜',
     keywords: ['烏龜', '龜', 'turtle'],
     icon: '🐢',
@@ -143,7 +143,7 @@ export const catalogData: CatalogEntry[] = [
   },
   {
     id: 'animal_horse_glb',
-    category: 'animal',
+    category: 'animal_land',
     label: '馬',
     keywords: ['馬', 'horse'],
     icon: '🐎',
@@ -151,7 +151,7 @@ export const catalogData: CatalogEntry[] = [
   },
   {
     id: 'animal_fox_glb',
-    category: 'animal',
+    category: 'animal_land',
     label: '狐狸',
     keywords: ['狐狸', 'fox'],
     icon: '🦊',
@@ -159,7 +159,7 @@ export const catalogData: CatalogEntry[] = [
   },
   {
     id: 'animal_wolf_glb',
-    category: 'animal',
+    category: 'animal_land',
     label: '狼',
     keywords: ['狼', 'wolf'],
     icon: '🐺',
@@ -167,7 +167,7 @@ export const catalogData: CatalogEntry[] = [
   },
   {
     id: 'animal_deer_glb',
-    category: 'animal',
+    category: 'animal_land',
     label: '鹿',
     keywords: ['鹿', 'deer'],
     icon: '🦌',
@@ -175,7 +175,7 @@ export const catalogData: CatalogEntry[] = [
   },
   {
     id: 'animal_dog_glb',
-    category: 'animal',
+    category: 'animal_land',
     label: '狗',
     keywords: ['狗', '犬', 'dog', 'husky'],
     icon: '🐕',
@@ -331,7 +331,7 @@ export const catalogData: CatalogEntry[] = [
   // 動物（第二批）
   {
     id: 'animal_cow_glb',
-    category: 'animal',
+    category: 'animal_land',
     label: '乳牛',
     keywords: ['牛', '乳牛', 'cow'],
     icon: '🐄',
@@ -339,7 +339,7 @@ export const catalogData: CatalogEntry[] = [
   },
   {
     id: 'animal_alpaca_glb',
-    category: 'animal',
+    category: 'animal_land',
     label: '羊駝',
     keywords: ['羊駝', '草泥馬', 'alpaca'],
     icon: '🦙',
@@ -347,7 +347,7 @@ export const catalogData: CatalogEntry[] = [
   },
   {
     id: 'animal_donkey_glb',
-    category: 'animal',
+    category: 'animal_land',
     label: '驢子',
     keywords: ['驢', '驢子', 'donkey'],
     icon: '🫏',
@@ -355,7 +355,7 @@ export const catalogData: CatalogEntry[] = [
   },
   {
     id: 'animal_stag_glb',
-    category: 'animal',
+    category: 'animal_land',
     label: '雄鹿',
     keywords: ['鹿', '雄鹿', 'stag'],
     icon: '🦌',
@@ -491,7 +491,7 @@ export const catalogData: CatalogEntry[] = [
   // ────────────────────────────────────────────────────────────
   {
     id: 'animal_whale_glb',
-    category: 'animal',
+    category: 'animal_water',
     label: '鯨魚',
     keywords: ['鯨魚', '鯨', '海洋', '水中', 'whale'],
     icon: '🐋',
@@ -499,7 +499,7 @@ export const catalogData: CatalogEntry[] = [
   },
   {
     id: 'animal_dolphin_glb',
-    category: 'animal',
+    category: 'animal_water',
     label: '海豚',
     keywords: ['海豚', '海洋', '水中', 'dolphin'],
     icon: '🐬',
@@ -507,7 +507,7 @@ export const catalogData: CatalogEntry[] = [
   },
   {
     id: 'animal_shark_glb',
-    category: 'animal',
+    category: 'animal_water',
     label: '鯊魚',
     keywords: ['鯊魚', '鯊', '海洋', '水中', 'shark'],
     icon: '🦈',
@@ -515,7 +515,7 @@ export const catalogData: CatalogEntry[] = [
   },
   {
     id: 'animal_manta_glb',
-    category: 'animal',
+    category: 'animal_water',
     label: '魟魚',
     keywords: ['魟魚', '魟', '海洋', '水中', 'manta', 'ray'],
     icon: '🐟',
@@ -523,7 +523,7 @@ export const catalogData: CatalogEntry[] = [
   },
   {
     id: 'animal_koi_glb',
-    category: 'animal',
+    category: 'animal_water',
     label: '錦鯉',
     keywords: ['錦鯉', '鯉魚', '魚', '水中', 'koi'],
     icon: '🎏',
@@ -531,7 +531,7 @@ export const catalogData: CatalogEntry[] = [
   },
   {
     id: 'animal_clownfish_glb',
-    category: 'animal',
+    category: 'animal_water',
     label: '小丑魚',
     keywords: ['小丑魚', '魚', '水中', 'clownfish'],
     icon: '🐠',
@@ -539,7 +539,7 @@ export const catalogData: CatalogEntry[] = [
   },
   {
     id: 'animal_goldfish_glb',
-    category: 'animal',
+    category: 'animal_water',
     label: '金魚',
     keywords: ['金魚', '魚', '水中', 'goldfish'],
     icon: '🐡',
@@ -549,7 +549,7 @@ export const catalogData: CatalogEntry[] = [
   // 陸地動物（第三批）
   {
     id: 'animal_pig_glb',
-    category: 'animal',
+    category: 'animal_land',
     label: '豬',
     keywords: ['豬', 'pig'],
     icon: '🐷',
@@ -557,7 +557,7 @@ export const catalogData: CatalogEntry[] = [
   },
   {
     id: 'animal_sheep_glb',
-    category: 'animal',
+    category: 'animal_land',
     label: '綿羊',
     keywords: ['綿羊', '羊', 'sheep'],
     icon: '🐑',
@@ -565,7 +565,7 @@ export const catalogData: CatalogEntry[] = [
   },
   {
     id: 'animal_zebra_glb',
-    category: 'animal',
+    category: 'animal_land',
     label: '斑馬',
     keywords: ['斑馬', 'zebra'],
     icon: '🦓',
@@ -573,7 +573,7 @@ export const catalogData: CatalogEntry[] = [
   },
   {
     id: 'animal_shiba_glb',
-    category: 'animal',
+    category: 'animal_land',
     label: '柴犬',
     keywords: ['柴犬', '狗', 'shiba', 'dog'],
     icon: '🐕‍🦺',
@@ -581,7 +581,7 @@ export const catalogData: CatalogEntry[] = [
   },
   {
     id: 'animal_bull_glb',
-    category: 'animal',
+    category: 'animal_land',
     label: '公牛',
     keywords: ['公牛', '牛', 'bull'],
     icon: '🐂',
@@ -596,5 +596,97 @@ export const catalogData: CatalogEntry[] = [
     keywords: ['寶箱', '寶藏', '寶物', 'treasure', 'chest'],
     icon: '🧰',
     visualSource: { type: 'gltf', url: 'assets/models/pirate-kit/treasure-chest.gltf', targetSize: 3 },
+  },
+
+  // ────────────────────────────────────────────────────────────
+  // 擴充批次：更多人物原型、器物、交通工具（Quaternius / Kenney，CC0）
+  // ────────────────────────────────────────────────────────────
+  {
+    id: 'person_farmer_glb',
+    category: 'person',
+    label: '農夫',
+    keywords: ['農夫', '農人', 'farmer'],
+    icon: '👨‍🌾',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-people/farmer.glb', targetSize: 4.5 },
+  },
+  {
+    id: 'person_worker_glb',
+    category: 'person',
+    label: '工人',
+    keywords: ['工人', 'worker'],
+    icon: '👷',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-people/worker.glb', targetSize: 4.5 },
+  },
+  {
+    id: 'person_adventurer_glb',
+    category: 'person',
+    label: '冒險者',
+    keywords: ['冒險者', '探險家', 'adventurer'],
+    icon: '🧗',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-people/adventurer.glb', targetSize: 4.5 },
+  },
+  {
+    id: 'fantasy_king_glb',
+    category: 'fantasy',
+    label: '國王',
+    keywords: ['國王', '王', 'king'],
+    icon: '🤴',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-people/king.glb', targetSize: 4.8 },
+  },
+  {
+    id: 'fantasy_witch_glb',
+    category: 'fantasy',
+    label: '女巫',
+    keywords: ['女巫', '巫婆', 'witch'],
+    icon: '🧙‍♀️',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-people/witch.glb', targetSize: 4.5 },
+  },
+  {
+    id: 'fantasy_sword_glb',
+    category: 'fantasy',
+    label: '劍',
+    keywords: ['劍', '武器', 'sword'],
+    icon: '🗡️',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-rpg/sword.glb', targetSize: 3 },
+  },
+  {
+    id: 'fantasy_crown_glb',
+    category: 'fantasy',
+    label: '皇冠',
+    keywords: ['皇冠', '王冠', 'crown'],
+    icon: '👑',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-rpg/crown.glb', targetSize: 2 },
+  },
+  {
+    id: 'religious_book_glb',
+    category: 'religious_mythical',
+    label: '書本',
+    keywords: ['書', '書本', '典籍', 'book'],
+    icon: '📖',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-rpg/book.glb', targetSize: 2 },
+  },
+  {
+    id: 'vehicle_train_glb',
+    category: 'vehicle',
+    label: '火車頭',
+    keywords: ['火車', '火車頭', 'train', 'locomotive'],
+    icon: '🚂',
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-train/locomotive.glb', targetSize: 6 },
+  },
+  {
+    id: 'fantasy_snowman_glb',
+    category: 'fantasy',
+    label: '雪人',
+    keywords: ['雪人', 'snowman'],
+    icon: '⛄',
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-holiday/snowman.glb', targetSize: 3.5 },
+  },
+  {
+    id: 'building_bench_glb',
+    category: 'building',
+    label: '長椅',
+    keywords: ['長椅', '椅子', 'bench'],
+    icon: '🪑',
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/bench.glb', targetSize: 3.5 },
   },
 ];
