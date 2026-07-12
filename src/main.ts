@@ -57,9 +57,8 @@ const stateMachine = new InputStateMachine({
   },
 });
 
-sand.onChanged(() => {
-  for (const placed of registry.all()) settleObject(placed, raycast, sand);
-});
+// 塑沙後的物件重新沉降由 InputStateMachine.resettleNear 處理（只沉降筆刷附近的物件）；
+// 不在這裡訂閱 sand.onChanged 對全場重算，否則會抵銷塑沙節流的效能優化。
 
 const drawer = new ObjectDrawer(drawerEl, {
   onPick: (kindId) => {

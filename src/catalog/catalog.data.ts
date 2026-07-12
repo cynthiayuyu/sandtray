@@ -178,18 +178,18 @@ export const catalogData: CatalogEntry[] = [
   {
     id: 'person_male_glb',
     category: 'person',
-    label: '男人（模型）',
+    label: '男人',
     keywords: ['男人', '男性', 'man'],
     icon: '👨',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-mini-characters/character-male-a.glb', scale: 2.2 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-people/man-casual.glb', targetSize: 4.5 },
   },
   {
     id: 'person_female_glb',
     category: 'person',
-    label: '女人（模型）',
+    label: '女人',
     keywords: ['女人', '女性', 'woman'],
     icon: '👩',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-mini-characters/character-female-a.glb', scale: 2.2 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-people/woman-casual.glb', targetSize: 4.5 },
   },
   {
     id: 'animal_horse_glb',
@@ -197,7 +197,7 @@ export const catalogData: CatalogEntry[] = [
     label: '馬（模型）',
     keywords: ['馬', 'horse'],
     icon: '🐎',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/horse.glb', scale: 2.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/horse.glb', targetSize: 6 },
   },
   {
     id: 'animal_fox_glb',
@@ -205,7 +205,7 @@ export const catalogData: CatalogEntry[] = [
     label: '狐狸',
     keywords: ['狐狸', 'fox'],
     icon: '🦊',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/fox.glb', scale: 2.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/fox.glb', targetSize: 3 },
   },
   {
     id: 'animal_wolf_glb',
@@ -213,7 +213,7 @@ export const catalogData: CatalogEntry[] = [
     label: '狼',
     keywords: ['狼', 'wolf'],
     icon: '🐺',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/wolf.glb', scale: 2.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/wolf.glb', targetSize: 4 },
   },
   {
     id: 'animal_deer_glb',
@@ -221,7 +221,7 @@ export const catalogData: CatalogEntry[] = [
     label: '鹿',
     keywords: ['鹿', 'deer'],
     icon: '🦌',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/deer.glb', scale: 2.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/deer.glb', targetSize: 5.5 },
   },
   {
     id: 'animal_dog_glb',
@@ -229,7 +229,7 @@ export const catalogData: CatalogEntry[] = [
     label: '狗',
     keywords: ['狗', '犬', 'dog', 'husky'],
     icon: '🐕',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/husky.glb', scale: 2.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/husky.glb', targetSize: 3.5 },
   },
   {
     id: 'plant_oak_glb',
@@ -237,7 +237,7 @@ export const catalogData: CatalogEntry[] = [
     label: '橡樹（模型）',
     keywords: ['橡樹', '樹', 'oak', 'tree'],
     icon: '🌳',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/tree_oak.glb', scale: 5 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/tree_oak.glb', targetSize: 8 },
   },
   {
     id: 'plant_flower_glb',
@@ -245,7 +245,7 @@ export const catalogData: CatalogEntry[] = [
     label: '花（模型）',
     keywords: ['花', '花朵', 'flower'],
     icon: '🌺',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/flower_red.glb', scale: 3 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/flower_red.glb', targetSize: 2.5 },
   },
   {
     id: 'plant_mushroom_glb',
@@ -253,7 +253,7 @@ export const catalogData: CatalogEntry[] = [
     label: '蘑菇',
     keywords: ['蘑菇', '香菇', 'mushroom'],
     icon: '🍄',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/mushroom_red.glb', scale: 3 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/mushroom_red.glb', targetSize: 2 },
   },
   {
     id: 'natural_rock_large_glb',
@@ -261,7 +261,7 @@ export const catalogData: CatalogEntry[] = [
     label: '大岩石（模型）',
     keywords: ['岩石', '大石頭', 'rock', 'boulder'],
     icon: '🪨',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/rock_large.glb', scale: 4 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/rock_large.glb', targetSize: 5 },
   },
   {
     id: 'natural_rock_tall_glb',
@@ -269,7 +269,7 @@ export const catalogData: CatalogEntry[] = [
     label: '尖岩',
     keywords: ['岩石', '尖岩', 'rock', 'spire'],
     icon: '🗻',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/rock_tall.glb', scale: 4 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/rock_tall.glb', targetSize: 4.5 },
   },
   {
     id: 'building_bridge_stone_glb',
@@ -277,7 +277,7 @@ export const catalogData: CatalogEntry[] = [
     label: '石橋',
     keywords: ['橋', '石橋', 'bridge', 'stone'],
     icon: '🌉',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/bridge_stone.glb', scale: 3 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/bridge_stone.glb', targetSize: 12 },
   },
   {
     id: 'building_tent_glb',
@@ -285,7 +285,7 @@ export const catalogData: CatalogEntry[] = [
     label: '帳篷',
     keywords: ['帳篷', '帳', 'tent'],
     icon: '⛺',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-survival/tent.glb', scale: 3 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-survival/tent.glb', targetSize: 6 },
   },
   {
     id: 'vehicle_sailboat_glb',
@@ -293,7 +293,7 @@ export const catalogData: CatalogEntry[] = [
     label: '帆船（模型）',
     keywords: ['船', '帆船', 'boat', 'sail'],
     icon: '⛵',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-watercraft/boat-sail.glb', scale: 2.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-watercraft/boat-sail.glb', targetSize: 8 },
   },
   {
     id: 'vehicle_canoe_glb',
@@ -301,7 +301,7 @@ export const catalogData: CatalogEntry[] = [
     label: '獨木舟',
     keywords: ['獨木舟', '船', 'canoe'],
     icon: '🛶',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/canoe.glb', scale: 2.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/canoe.glb', targetSize: 5.5 },
   },
   {
     id: 'religious_cross_glb',
@@ -309,7 +309,7 @@ export const catalogData: CatalogEntry[] = [
     label: '十字架（模型）',
     keywords: ['十字架', '十字', 'cross'],
     icon: '✝️',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/cross.glb', scale: 2.2 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/cross.glb', targetSize: 3.5 },
   },
   {
     id: 'religious_candle_glb',
@@ -317,7 +317,7 @@ export const catalogData: CatalogEntry[] = [
     label: '蠟燭（模型）',
     keywords: ['蠟燭', '燭', 'candle'],
     icon: '🕯️',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/candle.glb', scale: 2.2 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/candle.glb', targetSize: 1.8 },
   },
   {
     id: 'religious_altar_glb',
@@ -325,7 +325,7 @@ export const catalogData: CatalogEntry[] = [
     label: '石祭壇',
     keywords: ['祭壇', '石祭壇', 'altar'],
     icon: '⛩️',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/altar-stone.glb', scale: 2.2 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/altar-stone.glb', targetSize: 4 },
   },
   {
     id: 'fantasy_ghost_glb',
@@ -333,7 +333,7 @@ export const catalogData: CatalogEntry[] = [
     label: '幽靈',
     keywords: ['幽靈', '鬼', 'ghost'],
     icon: '👻',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/character-ghost.glb', scale: 2.2 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/character-ghost.glb', targetSize: 3.5 },
   },
   {
     id: 'fantasy_skeleton_glb',
@@ -341,7 +341,7 @@ export const catalogData: CatalogEntry[] = [
     label: '骷髏',
     keywords: ['骷髏', '骨骸', 'skeleton'],
     icon: '💀',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/character-skeleton.glb', scale: 2.2 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/character-skeleton.glb', targetSize: 4 },
   },
   {
     id: 'fantasy_orc_glb',
@@ -349,25 +349,25 @@ export const catalogData: CatalogEntry[] = [
     label: '半獸人',
     keywords: ['半獸人', '獸人', 'orc'],
     icon: '👹',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-mini-dungeon/character-orc.glb', scale: 2.2 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-mini-dungeon/character-orc.glb', targetSize: 4 },
   },
 
   // 人物（第二批）
   {
     id: 'person_male_b_glb',
     category: 'person',
-    label: '男人 2',
+    label: '西裝男人',
     keywords: ['男人', '男性', 'man'],
     icon: '👨‍🦱',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-mini-characters/character-male-b.glb', scale: 2.2 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-people/man-suit.glb', targetSize: 4.5 },
   },
   {
     id: 'person_female_b_glb',
     category: 'person',
-    label: '女人 2',
+    label: '正裝女人',
     keywords: ['女人', '女性', 'woman'],
     icon: '👩‍🦰',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-mini-characters/character-female-b.glb', scale: 2.2 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-people/woman-formal.glb', targetSize: 4.5 },
   },
   {
     id: 'person_wheelchair_glb',
@@ -375,7 +375,7 @@ export const catalogData: CatalogEntry[] = [
     label: '輪椅',
     keywords: ['輪椅', 'wheelchair'],
     icon: '🦽',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-mini-characters/wheelchair.glb', scale: 2.2 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-mini-characters/wheelchair.glb', targetSize: 3.5 },
   },
 
   // 動物（第二批）
@@ -385,7 +385,7 @@ export const catalogData: CatalogEntry[] = [
     label: '乳牛',
     keywords: ['牛', '乳牛', 'cow'],
     icon: '🐄',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/cow.glb', scale: 2.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/cow.glb', targetSize: 5.5 },
   },
   {
     id: 'animal_alpaca_glb',
@@ -393,7 +393,7 @@ export const catalogData: CatalogEntry[] = [
     label: '羊駝',
     keywords: ['羊駝', '草泥馬', 'alpaca'],
     icon: '🦙',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/alpaca.glb', scale: 2.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/alpaca.glb', targetSize: 4.5 },
   },
   {
     id: 'animal_donkey_glb',
@@ -401,7 +401,7 @@ export const catalogData: CatalogEntry[] = [
     label: '驢子',
     keywords: ['驢', '驢子', 'donkey'],
     icon: '🫏',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/donkey.glb', scale: 2.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/donkey.glb', targetSize: 5 },
   },
   {
     id: 'animal_stag_glb',
@@ -409,7 +409,7 @@ export const catalogData: CatalogEntry[] = [
     label: '雄鹿',
     keywords: ['鹿', '雄鹿', 'stag'],
     icon: '🦌',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/stag.glb', scale: 2.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/stag.glb', targetSize: 5.5 },
   },
 
   // 植物（第二批）
@@ -419,7 +419,7 @@ export const catalogData: CatalogEntry[] = [
     label: '棕櫚樹',
     keywords: ['棕櫚', '椰子樹', 'palm'],
     icon: '🌴',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/tree_palm.glb', scale: 5 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/tree_palm.glb', targetSize: 9 },
   },
   {
     id: 'plant_bush_glb',
@@ -427,7 +427,7 @@ export const catalogData: CatalogEntry[] = [
     label: '灌木',
     keywords: ['灌木', '樹叢', 'bush'],
     icon: '🌿',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/plant_bush.glb', scale: 4 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/plant_bush.glb', targetSize: 3 },
   },
 
   // 自然物（第二批）
@@ -437,7 +437,7 @@ export const catalogData: CatalogEntry[] = [
     label: '營火',
     keywords: ['營火', '火堆', '火', 'campfire', 'fire'],
     icon: '🔥',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/campfire_stones.glb', scale: 4 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/campfire_stones.glb', targetSize: 3.5 },
   },
   {
     id: 'natural_mountain_glb',
@@ -445,7 +445,7 @@ export const catalogData: CatalogEntry[] = [
     label: '山',
     keywords: ['山', '高山', 'mountain'],
     icon: '⛰️',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-fantasy-rts/mountain.gltf', scale: 1.2 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-fantasy-rts/mountain.gltf', targetSize: 14 },
   },
 
   // 建築（第二批）
@@ -455,7 +455,7 @@ export const catalogData: CatalogEntry[] = [
     label: '小屋（模型）',
     keywords: ['小屋', '房屋', '茅屋', 'house', 'hut'],
     icon: '🛖',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-fantasy-rts/house.gltf', scale: 1.2 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-fantasy-rts/house.gltf', targetSize: 8 },
   },
   {
     id: 'building_fence_glb',
@@ -463,7 +463,7 @@ export const catalogData: CatalogEntry[] = [
     label: '圍籬',
     keywords: ['圍籬', '柵欄', '籬笆', 'fence'],
     icon: '🚧',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/fence_simple.glb', scale: 4 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/fence_simple.glb', targetSize: 6 },
   },
 
   // 交通工具（第二批）
@@ -473,7 +473,7 @@ export const catalogData: CatalogEntry[] = [
     label: '轎車',
     keywords: ['轎車', '汽車', '車', 'car', 'sedan'],
     icon: '🚙',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-car-kit/sedan.glb', scale: 2.2 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-car-kit/sedan.glb', targetSize: 5 },
   },
   {
     id: 'vehicle_ambulance_glb',
@@ -481,7 +481,7 @@ export const catalogData: CatalogEntry[] = [
     label: '救護車',
     keywords: ['救護車', 'ambulance'],
     icon: '🚑',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-car-kit/ambulance.glb', scale: 2.2 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-car-kit/ambulance.glb', targetSize: 5.5 },
   },
   {
     id: 'vehicle_rowboat_glb',
@@ -489,7 +489,7 @@ export const catalogData: CatalogEntry[] = [
     label: '划艇',
     keywords: ['划艇', '小船', 'rowboat'],
     icon: '🚣',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-watercraft/boat-row-small.glb', scale: 2.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-watercraft/boat-row-small.glb', targetSize: 5 },
   },
 
   // 宗教／神話（第二批）
@@ -499,7 +499,7 @@ export const catalogData: CatalogEntry[] = [
     label: '墓碑',
     keywords: ['墓碑', '墓', 'gravestone', 'grave'],
     icon: '🪦',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/gravestone-round.glb', scale: 2.2 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/gravestone-round.glb', targetSize: 2.5 },
   },
   {
     id: 'religious_obelisk_glb',
@@ -507,7 +507,7 @@ export const catalogData: CatalogEntry[] = [
     label: '方尖碑',
     keywords: ['方尖碑', '石柱', 'obelisk'],
     icon: '🗿',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/pillar-obelisk.glb', scale: 2.2 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/pillar-obelisk.glb', targetSize: 4 },
   },
   {
     id: 'religious_lantern_glb',
@@ -515,7 +515,7 @@ export const catalogData: CatalogEntry[] = [
     label: '燈籠',
     keywords: ['燈籠', '燈', 'lantern'],
     icon: '🏮',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/lantern-candle.glb', scale: 2.2 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/lantern-candle.glb', targetSize: 2 },
   },
 
   // 幻想生物（第二批）
@@ -525,7 +525,7 @@ export const catalogData: CatalogEntry[] = [
     label: '吸血鬼',
     keywords: ['吸血鬼', 'vampire'],
     icon: '🧛',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/character-vampire.glb', scale: 2.2 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/character-vampire.glb', targetSize: 4 },
   },
   {
     id: 'fantasy_zombie_glb',
@@ -533,6 +533,6 @@ export const catalogData: CatalogEntry[] = [
     label: '殭屍',
     keywords: ['殭屍', '喪屍', 'zombie'],
     icon: '🧟',
-    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/character-zombie.glb', scale: 2.2 },
+    visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/character-zombie.glb', targetSize: 4 },
   },
 ];

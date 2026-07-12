@@ -3,9 +3,10 @@ import { TRAY_W, TRAY_D, SEG_X, SEG_Z, SAND_TOP, FLOOR, MAX_H } from '../config/
 import { paintSand } from './SandPainter';
 import type { SculptPoint, SculptDirection } from './types';
 
-// 筆刷力道刻意放緩：治療情境中塑沙是緩慢細膩的動作，太快會讓「想攤平」一不小心變成挖洞
+// 筆刷力道刻意放緩：治療情境中塑沙是緩慢細膩的動作，太快會讓「想攤平」一不小心變成挖洞。
+// 搭配 InputStateMachine 的每影格節流（60fps），0.08/影格 ≈ 按住 1.2 秒才會從沙面挖到藍底。
 const BRUSH_RADIUS = 6.5;
-const BRUSH_STRENGTH = 0.18;
+const BRUSH_STRENGTH = 0.08;
 
 /**
  * 沙面用單層高度場（heightfield）表示：一張 PlaneGeometry，每個頂點的 Y 值即該格的沙高。

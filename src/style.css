@@ -100,7 +100,7 @@ canvas {
   padding: 10px;
   border-radius: 14px;
   width: min(560px, 92vw);
-  max-height: 46vh;
+  max-height: 52vh;
   background: rgba(242, 237, 228, 0.94);
   box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(6px);
@@ -111,6 +111,7 @@ canvas {
 #drawer .search-row {
   display: flex;
   gap: 6px;
+  flex: none; /* 物件多時（如「全部」分頁）不得被壓縮，否則搜尋框/頁籤會被格狀清單擠到看不見 */
 }
 #drawer .search-row input {
   flex: 1;
@@ -127,6 +128,7 @@ canvas {
   gap: 4px;
   overflow-x: auto;
   scrollbar-width: none;
+  flex: none;
 }
 #drawer .tabs::-webkit-scrollbar {
   display: none;
@@ -156,6 +158,8 @@ canvas {
   gap: 4px;
   overflow-y: auto;
   padding-top: 2px;
+  flex: 1;
+  min-height: 0; /* 讓 grid 在 flex 容器內正確收縮並啟用自身捲動，而不是把上方的搜尋框/頁籤擠出視野 */
 }
 #drawer .empty {
   padding: 18px 6px;

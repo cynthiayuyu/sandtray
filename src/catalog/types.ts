@@ -32,7 +32,19 @@ export const CATEGORY_LABELS: Record<Category, string> = {
 
 export type VisualSource =
   | { type: 'procedural'; builderKey: string }
-  | { type: 'gltf'; url: string; scale?: number; yOffset?: number };
+  | {
+      type: 'gltf';
+      url: string;
+      /**
+       * 模型「最長邊」要正規化到的公分數。外部素材包的原始尺度差異極大（有的以公尺、
+       * 有的以任意單位建模），用固定 scale 逐一手調很難維持一致；改成載入後量測
+       * bounding box、自動縮放到 targetSize，物件之間的相對大小就穩定了。
+       */
+      targetSize?: number;
+      /** 少數情況仍要手動覆寫縮放倍率時使用（與 targetSize 擇一） */
+      scale?: number;
+      yOffset?: number;
+    };
 
 /**
  * 物件目錄項目：只含使用者可見的中繼資料。

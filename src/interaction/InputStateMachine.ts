@@ -53,6 +53,7 @@ export class InputStateMachine {
   private downHitPlaced: PlacedObject | null = null;
   private armedDrag: PlacedObject | null = null;
   private placing = false;
+  private lastSculptTime = 0;
   private readonly deps: InputStateMachineDeps;
 
   constructor(deps: InputStateMachineDeps) {
@@ -79,10 +80,7 @@ export class InputStateMachine {
 
     if (this.mode === 'raise' || this.mode === 'dig') {
       const pt = this.deps.raycast.hitSand(p.ndc);
-      if (pt) {
-        this.deps.sand.sculpt({ x: pt.x, z: pt.z }, this.mode === 'raise' ? 1 : -1);
-        this.resettleAll();
-      }
+      if (pt) this.queueSculpt(pt.x, pt.z);
       return;
     }
 
@@ -113,10 +111,7 @@ export class InputStateMachine {
 
     if (this.mode === 'raise' || this.mode === 'dig') {
       const pt = this.deps.raycast.hitSand(p.ndc);
-      if (pt) {
-        this.deps.sand.sculpt({ x: pt.x, z: pt.z }, this.mode === 'raise' ? 1 : -1);
-        this.resettleAll();
-      }
+      if (pt) this.queueSculpt(pt.x, pt.z);
       return;
     }
 
@@ -226,9 +221,29 @@ export class InputStateMachine {
     }
   }
 
-  private resettleAll(): void {
+  /**
+   * 塑沙節流：pointermove 在高更新率的裝置上可以到每秒 120 次以上，每次都重算沙面
+   * 顏色/法線並重新沉降物件會明顯卡頓（尤其沙盤上已有多個模型時）。用時間戳把實際
+   * 雕刻限制在每 16ms 最多一次（≈60fps），高於此頻率的事件直接略過。
+   * 刻意不用 requestAnimationFrame 排程：部分嵌入式 WebView 對輸入事件中註冊的
+   * RAF 回呼不可靠，時間戳節流在任何環境行為都一致。
+   */
+  private queueSculpt(x: number, z: number): void {
+    const now = performance.now();
+    if (now - this.lastSculptTime < 16) return;
+    this.lastSculptTime = now;
+    this.deps.sand.sculpt({ x, z }, this.mode === 'raise' ? 1 : -1);
+    this.resettleNear(x, z);
+  }
+
+  /** 塑沙後只重新沉降筆刷附近的物件，不用每一筆都掃全場 */
+  private resettleNear(x: number, z: number, radius = 10): void {
     for (const placed of this.deps.registry.all()) {
-      settleObject(placed, this.deps.raycast, this.deps.sand);
+      const dx = placed.group.position.x - x;
+      const dz = placed.group.position.z - z;
+      if (dx * dx + dz * dz <= radius * radius) {
+        settleObject(placed, this.deps.raycast, this.deps.sand);
+      }
     }
   }
 
