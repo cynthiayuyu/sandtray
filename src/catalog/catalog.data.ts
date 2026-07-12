@@ -6,14 +6,6 @@ import type { CatalogEntry } from './types';
  */
 export const catalogData: CatalogEntry[] = [
   {
-    id: 'person_generic',
-    category: 'person',
-    label: '人',
-    keywords: ['人', '人物', 'person', 'human'],
-    icon: '🧍',
-    visualSource: { type: 'procedural', builderKey: 'person' },
-  },
-  {
     id: 'plant_tree',
     category: 'plant',
     label: '樹',
@@ -53,16 +45,6 @@ export const catalogData: CatalogEntry[] = [
     icon: '⛵',
     visualSource: { type: 'procedural', builderKey: 'boat' },
   },
-  {
-    id: 'demo_gltf_tree',
-    category: 'plant',
-    label: '（示範）GLTF 樹',
-    keywords: ['示範', 'demo', 'gltf'],
-    icon: '🌴',
-    // 刻意指向一個不存在的檔案：用來驗證「載入失敗→優雅降級為佔位符」這條路徑。
-    // 之後接上真實的 Quaternius／Kenney 等 CC0 素材包時，只要把 url 換成實際檔案即可。
-    visualSource: { type: 'gltf', url: 'assets/models/placeholder/tree-demo.glb' },
-  },
 
   // 動物
   {
@@ -82,14 +64,6 @@ export const catalogData: CatalogEntry[] = [
     visualSource: { type: 'procedural', builderKey: 'bird' },
   },
   {
-    id: 'animal_horse',
-    category: 'animal',
-    label: '馬',
-    keywords: ['馬', 'horse'],
-    icon: '🐴',
-    visualSource: { type: 'procedural', builderKey: 'horse' },
-  },
-  {
     id: 'animal_turtle',
     category: 'animal',
     label: '烏龜',
@@ -100,28 +74,12 @@ export const catalogData: CatalogEntry[] = [
 
   // 宗教／神話
   {
-    id: 'religious_cross',
-    category: 'religious_mythical',
-    label: '十字架',
-    keywords: ['十字架', '十字', 'cross'],
-    icon: '✝️',
-    visualSource: { type: 'procedural', builderKey: 'cross' },
-  },
-  {
     id: 'religious_stupa',
     category: 'religious_mythical',
     label: '佛塔',
     keywords: ['佛塔', '寶塔', '佛', 'stupa', 'pagoda'],
     icon: '🛕',
     visualSource: { type: 'procedural', builderKey: 'stupa' },
-  },
-  {
-    id: 'religious_candle',
-    category: 'religious_mythical',
-    label: '蠟燭',
-    keywords: ['蠟燭', '燭', 'candle'],
-    icon: '🕯️',
-    visualSource: { type: 'procedural', builderKey: 'candle' },
   },
 
   // 幻想生物
@@ -143,14 +101,6 @@ export const catalogData: CatalogEntry[] = [
   },
 
   // 植物
-  {
-    id: 'plant_flower',
-    category: 'plant',
-    label: '花',
-    keywords: ['花', '花朵', 'flower'],
-    icon: '🌸',
-    visualSource: { type: 'procedural', builderKey: 'flower' },
-  },
 
   // 建築
   {
@@ -194,10 +144,10 @@ export const catalogData: CatalogEntry[] = [
   {
     id: 'animal_horse_glb',
     category: 'animal',
-    label: '馬（模型）',
+    label: '馬',
     keywords: ['馬', 'horse'],
     icon: '🐎',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/horse.glb', targetSize: 6 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/horse.glb', targetSize: 5.5 },
   },
   {
     id: 'animal_fox_glb',
@@ -213,7 +163,7 @@ export const catalogData: CatalogEntry[] = [
     label: '狼',
     keywords: ['狼', 'wolf'],
     icon: '🐺',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/wolf.glb', targetSize: 4 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/wolf.glb', targetSize: 3.8 },
   },
   {
     id: 'animal_deer_glb',
@@ -221,7 +171,7 @@ export const catalogData: CatalogEntry[] = [
     label: '鹿',
     keywords: ['鹿', 'deer'],
     icon: '🦌',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/deer.glb', targetSize: 5.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/deer.glb', targetSize: 4.2 },
   },
   {
     id: 'animal_dog_glb',
@@ -234,7 +184,7 @@ export const catalogData: CatalogEntry[] = [
   {
     id: 'plant_oak_glb',
     category: 'plant',
-    label: '橡樹（模型）',
+    label: '橡樹',
     keywords: ['橡樹', '樹', 'oak', 'tree'],
     icon: '🌳',
     visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/tree_oak.glb', targetSize: 8 },
@@ -242,7 +192,7 @@ export const catalogData: CatalogEntry[] = [
   {
     id: 'plant_flower_glb',
     category: 'plant',
-    label: '花（模型）',
+    label: '花',
     keywords: ['花', '花朵', 'flower'],
     icon: '🌺',
     visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/flower_red.glb', targetSize: 2.5 },
@@ -258,7 +208,7 @@ export const catalogData: CatalogEntry[] = [
   {
     id: 'natural_rock_large_glb',
     category: 'natural',
-    label: '大岩石（模型）',
+    label: '大岩石',
     keywords: ['岩石', '大石頭', 'rock', 'boulder'],
     icon: '🪨',
     visualSource: { type: 'gltf', url: 'assets/models/kenney-nature/rock_large.glb', targetSize: 5 },
@@ -290,7 +240,7 @@ export const catalogData: CatalogEntry[] = [
   {
     id: 'vehicle_sailboat_glb',
     category: 'vehicle',
-    label: '帆船（模型）',
+    label: '帆船',
     keywords: ['船', '帆船', 'boat', 'sail'],
     icon: '⛵',
     visualSource: { type: 'gltf', url: 'assets/models/kenney-watercraft/boat-sail.glb', targetSize: 8 },
@@ -306,7 +256,7 @@ export const catalogData: CatalogEntry[] = [
   {
     id: 'religious_cross_glb',
     category: 'religious_mythical',
-    label: '十字架（模型）',
+    label: '十字架',
     keywords: ['十字架', '十字', 'cross'],
     icon: '✝️',
     visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/cross.glb', targetSize: 3.5 },
@@ -314,7 +264,7 @@ export const catalogData: CatalogEntry[] = [
   {
     id: 'religious_candle_glb',
     category: 'religious_mythical',
-    label: '蠟燭（模型）',
+    label: '蠟燭',
     keywords: ['蠟燭', '燭', 'candle'],
     icon: '🕯️',
     visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/candle.glb', targetSize: 1.8 },
@@ -385,7 +335,7 @@ export const catalogData: CatalogEntry[] = [
     label: '乳牛',
     keywords: ['牛', '乳牛', 'cow'],
     icon: '🐄',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/cow.glb', targetSize: 5.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/cow.glb', targetSize: 5 },
   },
   {
     id: 'animal_alpaca_glb',
@@ -393,7 +343,7 @@ export const catalogData: CatalogEntry[] = [
     label: '羊駝',
     keywords: ['羊駝', '草泥馬', 'alpaca'],
     icon: '🦙',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/alpaca.glb', targetSize: 4.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/alpaca.glb', targetSize: 4 },
   },
   {
     id: 'animal_donkey_glb',
@@ -401,7 +351,7 @@ export const catalogData: CatalogEntry[] = [
     label: '驢子',
     keywords: ['驢', '驢子', 'donkey'],
     icon: '🫏',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/donkey.glb', targetSize: 5 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/donkey.glb', targetSize: 4.5 },
   },
   {
     id: 'animal_stag_glb',
@@ -409,7 +359,7 @@ export const catalogData: CatalogEntry[] = [
     label: '雄鹿',
     keywords: ['鹿', '雄鹿', 'stag'],
     icon: '🦌',
-    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/stag.glb', targetSize: 5.5 },
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/stag.glb', targetSize: 4.8 },
   },
 
   // 植物（第二批）
@@ -452,7 +402,7 @@ export const catalogData: CatalogEntry[] = [
   {
     id: 'building_fantasy_house_glb',
     category: 'building',
-    label: '小屋（模型）',
+    label: '小屋',
     keywords: ['小屋', '房屋', '茅屋', 'house', 'hut'],
     icon: '🛖',
     visualSource: { type: 'gltf', url: 'assets/models/quaternius-fantasy-rts/house.gltf', targetSize: 8 },
@@ -534,5 +484,117 @@ export const catalogData: CatalogEntry[] = [
     keywords: ['殭屍', '喪屍', 'zombie'],
     icon: '🧟',
     visualSource: { type: 'gltf', url: 'assets/models/kenney-graveyard/character-zombie.glb', targetSize: 4 },
+  },
+
+  // ────────────────────────────────────────────────────────────
+  // 水中動物（Quaternius Animated Fish Pack / Cute Fish Pack，OBJ 轉 GLB）
+  // ────────────────────────────────────────────────────────────
+  {
+    id: 'animal_whale_glb',
+    category: 'animal',
+    label: '鯨魚',
+    keywords: ['鯨魚', '鯨', '海洋', '水中', 'whale'],
+    icon: '🐋',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-sea/whale.glb', targetSize: 9 },
+  },
+  {
+    id: 'animal_dolphin_glb',
+    category: 'animal',
+    label: '海豚',
+    keywords: ['海豚', '海洋', '水中', 'dolphin'],
+    icon: '🐬',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-sea/dolphin.glb', targetSize: 5 },
+  },
+  {
+    id: 'animal_shark_glb',
+    category: 'animal',
+    label: '鯊魚',
+    keywords: ['鯊魚', '鯊', '海洋', '水中', 'shark'],
+    icon: '🦈',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-sea/shark.glb', targetSize: 5.5 },
+  },
+  {
+    id: 'animal_manta_glb',
+    category: 'animal',
+    label: '魟魚',
+    keywords: ['魟魚', '魟', '海洋', '水中', 'manta', 'ray'],
+    icon: '🐟',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-sea/manta.glb', targetSize: 4.5 },
+  },
+  {
+    id: 'animal_koi_glb',
+    category: 'animal',
+    label: '錦鯉',
+    keywords: ['錦鯉', '鯉魚', '魚', '水中', 'koi'],
+    icon: '🎏',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-sea/koi.glb', targetSize: 2.5 },
+  },
+  {
+    id: 'animal_clownfish_glb',
+    category: 'animal',
+    label: '小丑魚',
+    keywords: ['小丑魚', '魚', '水中', 'clownfish'],
+    icon: '🐠',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-sea/clownfish.glb', targetSize: 1.8 },
+  },
+  {
+    id: 'animal_goldfish_glb',
+    category: 'animal',
+    label: '金魚',
+    keywords: ['金魚', '魚', '水中', 'goldfish'],
+    icon: '🐡',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-sea/goldfish.glb', targetSize: 1.8 },
+  },
+
+  // 陸地動物（第三批）
+  {
+    id: 'animal_pig_glb',
+    category: 'animal',
+    label: '豬',
+    keywords: ['豬', 'pig'],
+    icon: '🐷',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-farm/pig.glb', targetSize: 3.5 },
+  },
+  {
+    id: 'animal_sheep_glb',
+    category: 'animal',
+    label: '綿羊',
+    keywords: ['綿羊', '羊', 'sheep'],
+    icon: '🐑',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-farm/sheep.glb', targetSize: 3.5 },
+  },
+  {
+    id: 'animal_zebra_glb',
+    category: 'animal',
+    label: '斑馬',
+    keywords: ['斑馬', 'zebra'],
+    icon: '🦓',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-farm/zebra.glb', targetSize: 5 },
+  },
+  {
+    id: 'animal_shiba_glb',
+    category: 'animal',
+    label: '柴犬',
+    keywords: ['柴犬', '狗', 'shiba', 'dog'],
+    icon: '🐕‍🦺',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/shiba.glb', targetSize: 3 },
+  },
+  {
+    id: 'animal_bull_glb',
+    category: 'animal',
+    label: '公牛',
+    keywords: ['公牛', '牛', 'bull'],
+    icon: '🐂',
+    visualSource: { type: 'gltf', url: 'assets/models/quaternius-animals/bull.glb', targetSize: 5.5 },
+  },
+
+  // 寶物（沙遊中常見的珍寶／秘密象徵）
+  {
+    id: 'fantasy_treasure_glb',
+    category: 'fantasy',
+    label: '寶箱',
+    keywords: ['寶箱', '寶藏', '寶物', 'treasure', 'chest'],
+    icon: '🧰',
+    visualSource: { type: 'gltf', url: 'assets/models/pirate-kit/treasure-chest.gltf', targetSize: 3 },
   },
 ];
