@@ -54,6 +54,10 @@ const stateMachine = new InputStateMachine({
   },
   onObjectPlaced: (placed) => {
     if (placed.isPlaceholderFallback) toast.show('此物件模型載入失敗，暫以佔位符顯示');
+    // 一次選擇只放置一個：放完就清除選定的物件種類，之後的點擊不會一直冒出同款物件；
+    // 要再放一個，回物件抽屜再點一次即可。
+    stateMachine.placeKind = null;
+    drawer.clearPick();
   },
 });
 
