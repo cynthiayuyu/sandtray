@@ -3,12 +3,24 @@ import { MODE_ICONS, MODE_LABELS, MODE_TOASTS } from './ModeStrings';
 
 const MODES: Mode[] = ['orbit', 'raise', 'dig', 'place'];
 
-/** 匯出視角：目前視角、正俯視、左斜 45°、右斜 45°（沙盤記錄慣例是多方位拍攝） */
-export type ExportView = 'current' | 'top' | 'isoLeft' | 'isoRight';
+/** 匯出視角（沙盤記錄慣例是多方位拍攝）：目前視角、俯視、四個正方位、兩個斜角 */
+export type ExportView =
+  | 'current'
+  | 'top'
+  | 'front'
+  | 'back'
+  | 'left'
+  | 'right'
+  | 'isoLeft'
+  | 'isoRight';
 
 const EXPORT_VIEW_LABELS: Array<[ExportView, string]> = [
   ['current', '目前視角'],
   ['top', '正俯視'],
+  ['front', '正面'],
+  ['back', '背面'],
+  ['left', '左側'],
+  ['right', '右側'],
   ['isoLeft', '左斜 45°'],
   ['isoRight', '右斜 45°'],
 ];

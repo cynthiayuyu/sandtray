@@ -7,7 +7,7 @@ import { SandHeightfield } from './sand/SandHeightfield';
 import { OrbitCamera } from './camera/OrbitCamera';
 import { ObjectRegistry } from './objects/ObjectRegistry';
 import { ObjectFactory } from './objects/ObjectFactory';
-import { settleObject } from './objects/settle';
+import { settleObject, objectHeight } from './objects/settle';
 import { RaycastService } from './interaction/RaycastService';
 import { SelectionController } from './interaction/SelectionController';
 import { InputStateMachine, applyTransform, type Mode } from './interaction/InputStateMachine';
@@ -89,13 +89,27 @@ const objectControlPanel = new ObjectControlPanel(objctlEl, {
   onCycleLie: () => {
     const s = selection.selected;
     if (!s) return;
-    const next: Record<typeof s.lieState, typeof s.lieState> = { stand: 'lieX', lieX: 'lieZ', lieZ: 'stand' };
+    const next: Record<typeof s.lieState, typeof s.lieState> = {
+      stand: 'lieFront',
+      lieFront: 'lieBack',
+      lieBack: 'lieSide',
+      lieSide: 'stand',
+    };
     s.lieState = next[s.lieState];
-    s.group.rotation.x = s.lieState === 'lieX' ? Math.PI / 2 : 0;
-    s.group.rotation.z = s.lieState === 'lieZ' ? Math.PI / 2 : 0;
+    s.group.rotation.x = s.lieState === 'lieFront' ? Math.PI / 2 : s.lieState === 'lieBack' ? -Math.PI / 2 : 0;
+    s.group.rotation.z = s.lieState === 'lieSide' ? Math.PI / 2 : 0;
     settleObject(s, raycast, sand);
     objectControlPanel.show(s);
     actionLog.emit({ type: 'object.transform', timestamp: Date.now(), placedId: s.id, lieState: s.lieState });
+  },
+  onBury: (dir) => {
+    const s = selection.selected;
+    if (!s) return;
+    const maxBury = objectHeight(s) * 0.8;
+    // 只能往下埋（最多八成高度）、最高回到沙面（0），不允許浮空
+    s.buryOffset = Math.max(-maxBury, Math.min(0, s.buryOffset + dir * 0.5));
+    settleObject(s, raycast, sand);
+    actionLog.emit({ type: 'object.transform', timestamp: Date.now(), placedId: s.id, buryOffset: s.buryOffset });
   },
   onScale: (dir) => {
     const s = selection.selected;
@@ -133,6 +147,10 @@ let invertScroll = localStorage.getItem(INVERT_KEY) === '1';
 // 匯出視角預設（theta=方位角, phi=仰角, dist=距離；沙盤記錄慣例是多方位拍攝）
 const EXPORT_VIEWS: Record<Exclude<ExportView, 'current'>, { theta: number; phi: number; dist: number }> = {
   top: { theta: 0, phi: 0.06, dist: 95 },
+  front: { theta: 0, phi: 1.15, dist: 105 },
+  back: { theta: Math.PI, phi: 1.15, dist: 105 },
+  left: { theta: Math.PI / 2, phi: 1.15, dist: 110 },
+  right: { theta: -Math.PI / 2, phi: 1.15, dist: 110 },
   isoLeft: { theta: Math.PI / 4, phi: 0.9, dist: 105 },
   isoRight: { theta: -Math.PI / 4, phi: 0.9, dist: 105 },
 };

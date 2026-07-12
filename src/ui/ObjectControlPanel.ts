@@ -3,19 +3,22 @@ import type { PlacedObject } from '../objects/PlacedObject';
 export interface ObjectControlCallbacks {
   onRotate(dir: 1 | -1): void;
   onFlip(): void;
-  /** 循環切換立起／躺下（前後）／躺下（左右），見 PlacedObject.LieState */
+  /** 循環切換立起／前趴／仰躺／側躺，見 PlacedObject.LieState */
   onCycleLie(): void;
   onScale(dir: 1 | -1): void;
+  /** 埋入沙中(-1)／抬回沙面(+1)。只能往下埋、不能浮空，見 PlacedObject.buryOffset */
+  onBury(dir: 1 | -1): void;
   onDelete(): void;
 }
 
 const LIE_TITLES: Record<PlacedObject['lieState'], string> = {
-  stand: '躺下',
-  lieX: '躺下（另一面／再點一下）',
-  lieZ: '立起',
+  stand: '躺下（前趴）',
+  lieFront: '仰躺',
+  lieBack: '側躺',
+  lieSide: '立起',
 };
 
-/** 選取物件時顯示的側邊控制面板：旋轉／翻轉／躺下立起／縮放／刪除 */
+/** 選取物件時顯示的側邊控制面板：旋轉／翻轉／躺姿／縮放／埋沙／刪除 */
 export class ObjectControlPanel {
   private lieBtn!: HTMLButtonElement;
   private flipBtn!: HTMLButtonElement;
@@ -45,7 +48,7 @@ export class ObjectControlPanel {
     this.el.append(rotL, rotR);
 
     this.flipBtn = mkBtn('⇋', '翻轉', () => this.callbacks.onFlip());
-    this.lieBtn = mkBtn('🛌', '躺下', () => this.callbacks.onCycleLie());
+    this.lieBtn = mkBtn('🛌', '躺下（前趴）', () => this.callbacks.onCycleLie());
     this.el.append(this.flipBtn, this.lieBtn);
 
     const sep = document.createElement('div');
@@ -59,6 +62,14 @@ export class ObjectControlPanel {
     const sep2 = document.createElement('div');
     sep2.className = 'sep';
     this.el.appendChild(sep2);
+
+    const bury = mkBtn('▼', '埋入沙中', () => this.callbacks.onBury(-1));
+    const lift = mkBtn('▲', '抬回沙面', () => this.callbacks.onBury(1));
+    this.el.append(bury, lift);
+
+    const sep3 = document.createElement('div');
+    sep3.className = 'sep';
+    this.el.appendChild(sep3);
 
     const del = mkBtn('✕', '移除', () => this.callbacks.onDelete());
     del.classList.add('del');
