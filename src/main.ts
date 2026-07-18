@@ -171,9 +171,16 @@ function exportWithView(view: ExportView): void {
   toast.show('已匯出沙盤影像');
 }
 
+// 觀察視角預設：俯視、從長邊 45° 斜角（最常見的沙盤觀察角度）
+const VIEW_PRESETS = {
+  top: { theta: 0, phi: 0.18, dist: 90 },
+  angle: { theta: 0, phi: Math.PI / 4, dist: 105 },
+};
+
 new Toolbar(document.getElementById('toolbar')!, {
   onModeChange: applyMode,
   onExport: exportWithView,
+  onViewPreset: (view) => orbitCamera.setView(VIEW_PRESETS[view]),
   onToggleInvertScroll: () => {
     invertScroll = !invertScroll;
     localStorage.setItem(INVERT_KEY, invertScroll ? '1' : '0');

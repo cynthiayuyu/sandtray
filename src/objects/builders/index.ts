@@ -6,6 +6,7 @@ import { house } from './house';
 import { rock } from './rock';
 import { boat } from './boat';
 import { placeholder } from './placeholder';
+import { burningCampfire } from './burningCampfire';
 import { snake } from './snake';
 import { bird } from './bird';
 import { horse } from './horse';
@@ -30,6 +31,7 @@ export const ProceduralBuilderRegistry: Record<string, ProceduralBuilder> = {
   rock,
   boat,
   placeholder,
+  burningCampfire,
   snake,
   bird,
   horse,

@@ -74,6 +74,15 @@ export class OrbitCamera {
     this.update();
   }
 
+  /** 直接切換到指定的視角預設（之後仍可從該視角繼續旋轉/縮放/平移） */
+  setView(view: { theta: number; phi: number; dist: number }): void {
+    this.theta = view.theta;
+    this.phi = view.phi;
+    this.dist = view.dist;
+    this.target.set(0, -1, 0);
+    this.update();
+  }
+
   private update(): void {
     this.phi = Math.max(CAMERA_MIN_PHI, Math.min(CAMERA_MAX_PHI, this.phi));
     this.dist = Math.max(CAMERA_MIN_DIST, Math.min(CAMERA_MAX_DIST, this.dist));

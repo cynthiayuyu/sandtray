@@ -25,9 +25,14 @@ const EXPORT_VIEW_LABELS: Array<[ExportView, string]> = [
   ['isoRight', '右斜 45°'],
 ];
 
+/** 視角快速切換：俯視、斜角（從長邊 45° 看，最常見的沙盤觀察角度） */
+export type ViewPreset = 'top' | 'angle';
+
 export interface ToolbarCallbacks {
   onModeChange(mode: Mode): void;
   onExport(view: ExportView): void;
+  /** 快速切換觀察視角（切換後仍可自由旋轉/縮放） */
+  onViewPreset(view: ViewPreset): void;
   /** 切換滑鼠滾輪/右鍵拖曳方向反轉（macOS 自然捲動使用者用），回傳切換後的狀態 */
   onToggleInvertScroll(): boolean;
   isScrollInverted(): boolean;
@@ -58,6 +63,20 @@ export class Toolbar {
       };
       this.el.appendChild(btn);
     });
+
+    const topBtn = document.createElement('button');
+    topBtn.className = 'tool';
+    topBtn.innerHTML = '<span class="ic">⬇️</span>俯視';
+    topBtn.title = '從正上方觀察沙盤';
+    topBtn.onclick = () => this.callbacks.onViewPreset('top');
+    this.el.appendChild(topBtn);
+
+    const angleBtn = document.createElement('button');
+    angleBtn.className = 'tool';
+    angleBtn.innerHTML = '<span class="ic">📐</span>斜角';
+    angleBtn.title = '從長邊 45° 斜角觀察（最常見的角度）';
+    angleBtn.onclick = () => this.callbacks.onViewPreset('angle');
+    this.el.appendChild(angleBtn);
 
     const exportBtn = document.createElement('button');
     exportBtn.className = 'tool';
