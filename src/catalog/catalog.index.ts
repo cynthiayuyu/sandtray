@@ -2,7 +2,10 @@ import { catalogData } from './catalog.data';
 import { CATEGORY_ORDER, type Category, type CatalogEntry } from './types';
 
 export function entriesByCategory(category: Category): CatalogEntry[] {
-  return catalogData.filter((e) => e.category === category);
+  // 依名稱排序：同系列的物件（西裝一/西裝二、工人一/工人二…）自然相鄰，方便挑選
+  return catalogData
+    .filter((e) => e.category === category)
+    .sort((a, b) => a.label.localeCompare(b.label, 'zh-Hant'));
 }
 
 export function categoriesWithEntries(): Category[] {

@@ -7,6 +7,8 @@ import { SandHeightfield } from './sand/SandHeightfield';
 import { OrbitCamera } from './camera/OrbitCamera';
 import { ObjectRegistry } from './objects/ObjectRegistry';
 import { ObjectFactory } from './objects/ObjectFactory';
+import { PlacedObject } from './objects/PlacedObject';
+import { findEntry } from './catalog/catalog.index';
 import { settleObject, objectHeight } from './objects/settle';
 import { RaycastService } from './interaction/RaycastService';
 import { SelectionController } from './interaction/SelectionController';
@@ -118,6 +120,34 @@ const objectControlPanel = new ObjectControlPanel(objctlEl, {
     applyTransform(s);
     settleObject(s, raycast, sand);
     actionLog.emit({ type: 'object.transform', timestamp: Date.now(), placedId: s.id, scale: s.scale });
+  },
+  onDuplicate: () => {
+    const s = selection.selected;
+    if (!s) return;
+    void (async () => {
+      const entry = findEntry(s.kindId);
+      if (!entry) return;
+      const { group, isPlaceholderFallback } = await factory.create(entry);
+      group.traverse((o) => {
+        if (o instanceof THREE.Mesh) {
+          o.castShadow = true;
+          o.receiveShadow = true;
+        }
+      });
+      // 複製原件的姿勢與狀態，位置放在旁邊一點
+      group.position.set(s.group.position.x + 4, 0, s.group.position.z + 2);
+      group.rotation.copy(s.group.rotation);
+      const placed = new PlacedObject(s.kindId, group, isPlaceholderFallback);
+      placed.scale = s.scale;
+      placed.flipped = s.flipped;
+      placed.lieState = s.lieState;
+      applyTransform(placed);
+      scene.add(group);
+      registry.add(placed);
+      settleObject(placed, raycast, sand);
+      selection.select(placed);
+      actionLog.emit({ type: 'object.place', timestamp: Date.now(), placedId: placed.id, kindId: s.kindId, duplicatedFrom: s.id });
+    })();
   },
   onDelete: () => {
     const s = selection.selected;

@@ -8,6 +8,8 @@ export interface ObjectControlCallbacks {
   onScale(dir: 1 | -1): void;
   /** 埋入沙中(-1)／抬回沙面(+1)。只能往下埋、不能浮空，見 PlacedObject.buryOffset */
   onBury(dir: 1 | -1): void;
+  /** 複製選取的物件（放在旁邊），不用回物件庫再翻找一次 */
+  onDuplicate(): void;
   onDelete(): void;
 }
 
@@ -66,6 +68,9 @@ export class ObjectControlPanel {
     const bury = mkBtn('▼', '埋入沙中', () => this.callbacks.onBury(-1));
     const lift = mkBtn('▲', '抬回沙面', () => this.callbacks.onBury(1));
     this.el.append(bury, lift);
+
+    const dup = mkBtn('⧉', '複製這個物件', () => this.callbacks.onDuplicate());
+    this.el.appendChild(dup);
 
     const sep3 = document.createElement('div');
     sep3.className = 'sep';

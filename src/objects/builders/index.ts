@@ -7,6 +7,8 @@ import { rock } from './rock';
 import { boat } from './boat';
 import { placeholder } from './placeholder';
 import { burningCampfire } from './burningCampfire';
+import { bigTree, sapling, tallPine, fruitTree } from './extraTrees';
+import { sun, moon, star, torii } from './religiousSymbols';
 import { snake } from './snake';
 import { bird } from './bird';
 import { horse } from './horse';
@@ -32,6 +34,14 @@ export const ProceduralBuilderRegistry: Record<string, ProceduralBuilder> = {
   boat,
   placeholder,
   burningCampfire,
+  bigTree,
+  sapling,
+  tallPine,
+  fruitTree,
+  sun,
+  moon,
+  star,
+  torii,
   snake,
   bird,
   horse,
